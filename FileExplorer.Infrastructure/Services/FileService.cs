@@ -11,32 +11,32 @@ namespace FileExplorer.Infrastructure.Services
 {
     public class FileService : IFileService
     {
-        public async Task<IList<FileItem>> GetFileItems(string path)
+        public async Task<IList<FileItem>> GetFileItemsAsync(string path)
         {
             return await Task.Run(() => GetFileItems(path,EnumerateFileItemOption.All));
         }
 
-        public async Task<IList<FileItem>> GetFiles(string path)
+        public async Task<IList<FileItem>> GetFilesAsync(string path)
         {
             return await Task.Run(() => GetFileItems(path, EnumerateFileItemOption.File));
         }
 
-        public async Task<IList<FileItem>> GetDirectories(string path)
+        public async Task<IList<FileItem>> GetDirectoriesAsync(string path)
         {
             return await Task.Run(() => GetFileItems(path, EnumerateFileItemOption.Directory));
         }
 
-        public async Task<IList<FileItem>> FindFileItems(string path, string pattern, SearchOption option)
+        public async Task<IList<FileItem>> FindFileItemsAsync(string path, string pattern, SearchOption option)
         {
             return await Task.Run(() => GetFileItems(path,pattern, EnumerateFileItemOption.All,option));
         }
 
-        public async Task<IList<FileItem>> FindFiles(string path, string pattern, SearchOption option)
+        public async Task<IList<FileItem>> FindFilesAsync(string path, string pattern, SearchOption option)
         {
             return await Task.Run(() => GetFileItems(path, pattern, EnumerateFileItemOption.File, option));
         }
 
-        public async Task<IList<FileItem>> FindDirectories(string path, string pattern, SearchOption option)
+        public async Task<IList<FileItem>> FindDirectoriesAsync(string path, string pattern, SearchOption option)
         {
             return await Task.Run(() => GetFileItems(path, pattern, EnumerateFileItemOption.Directory, option));
         }

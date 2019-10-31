@@ -13,7 +13,21 @@ namespace FileExplorer
         public Form1()
         {
             InitializeComponent();
-            Service=new FileService();
+            Service =new FileService();
+            PrepareDataForView();
+        }
+
+        private void PrepareDataForView()
+        {
+            this.FileTree.ImageList = this.SmallIconList;
+            this.FileList.SmallImageList = this.SmallIconList;
+            this.FileList.LargeImageList = this.LargeIconList;
+            var headers = ListViewItemFactory.GetHeaderItems();
+            foreach (var header in headers)
+            {
+                this.FileList.Columns.Add(header);
+            }
+            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -21,22 +35,37 @@ namespace FileExplorer
             var path = this.PathTb.Text;
             if (string.IsNullOrWhiteSpace(path))
                 return;
-            this.FileList.Items.Clear();
-            this.FileList.View = View.Details;
+            
             this.FileList.BeginUpdate();
-            var headers = ListViewItemFactory.GetHeaderItems();
-            foreach (var header in headers)
-            {
-                this.FileList.Columns.Add(header);
-            }
-            var list =await Service.GetFileItems(path);
-            var items = ListViewItemFactory.GetDetailItems(list);
+            this.FileList.Items.Clear();
+            var list =await Service.GetFileItemsAsync(path);
+            var items =await ListViewItemFactory.GetDetailItemsAsync(list);
             foreach (var item in items)
             {
                 this.FileList.Items.Add(item);
             }
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             this.FileList.EndUpdate();
+            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        }
+
+        private void DetailBtn_Click(object sender, EventArgs e)
+        {
+            this.FileList.View = View.Details;
+        }
+
+        private void SmallBtn_Click(object sender, EventArgs e)
+        {
+            this.FileList.View = View.SmallIcon;
+        }
+
+        private void LargeBtn_Click(object sender, EventArgs e)
+        {
+            this.FileList.View = View.LargeIcon;
+        }
+
+        private void ListBtn_Click(object sender, EventArgs e)
+        {
+            this.FileList.View = View.List;
         }
     }
 }

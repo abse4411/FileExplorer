@@ -26,21 +26,35 @@ namespace FileExplorer.Factories
             }
 
         }
-        public static IList<ListViewItem> GetDetailItems(IList<FileItem> list)
+        public static async Task<IList<ListViewItem>> GetDetailItemsAsync(IList<FileItem> list)
         {
-            var result=new List<ListViewItem>();
-
-            foreach (var item in list)
+            return await Task.Run(() =>
             {
-                ListViewItem lvi = new ListViewItem(item.Name);
-                lvi.SubItems.Add(item.LastWriteTime.ToString(CultureInfo.CurrentCulture));
-                lvi.SubItems.Add(item.LastAccessTime.ToString(CultureInfo.CurrentCulture));
-                lvi.SubItems.Add(item.CreationTime.ToLongDateString());
-                lvi.SubItems.Add(item.IsDirectory ? "Directory" : "File");
-                lvi.SubItems.Add(item.IsDirectory ? string.Empty : item.Length.ToString());
-                result.Add(lvi);
-            }
-            return result;
+                var result = new List<ListViewItem>();
+
+                foreach (var item in list)
+                {
+                    ListViewItem lvi = new ListViewItem(item.Name);
+                    lvi.SubItems.Add(item.LastWriteTime.ToString(CultureInfo.CurrentCulture));
+                    lvi.SubItems.Add(item.LastAccessTime.ToString(CultureInfo.CurrentCulture));
+                    lvi.SubItems.Add(item.CreationTime.ToLongDateString());
+                    if (item.IsDirectory)
+                    {
+                        lvi.SubItems.Add("Directory");
+                        lvi.ImageIndex = 0;
+                        lvi.SubItems.Add(string.Empty);
+
+                    }
+                    else
+                    {
+                        lvi.SubItems.Add("File");
+                        lvi.ImageIndex = 1;
+                        lvi.SubItems.Add(item.Length.ToString());
+                    }
+                    result.Add(lvi);
+                }
+                return result;
+            });
         }
 
         public static IList<ColumnHeader> GetHeaderItems()

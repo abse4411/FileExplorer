@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Factories\ListViewItemFactory.cs" />
+    <Compile Include="Factories\TreeNodeFactory.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +90,13 @@
       <Project>{7fe8f9c4-fe06-4fc2-8175-d52c66556fd9}</Project>
       <Name>FileExplorer.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Assets\document_L.png" />
+    <Content Include="Assets\document_S.png" />
+    <Content Include="Assets\folder_L.png" />
+    <Content Include="Assets\folder_S.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,12 +10,12 @@ namespace FileExplorer.Core.Services
 {
     public interface IFileService
     {
-        Task<IList<FileItem>> GetFileItems(string path);
-        Task<IList<FileItem>> GetFiles(string path);
-        Task<IList<FileItem>> GetDirectories(string path);
+        Task<IList<FileItem>> GetFileItemsAsync(string path);
+        Task<IList<FileItem>> GetFilesAsync(string path);
+        Task<IList<FileItem>> GetDirectoriesAsync(string path);
 
-        Task<IList<FileItem>> FindFileItems(string path,string pattern, SearchOption option);
-        Task<IList<FileItem>> FindFiles(string path, string pattern, SearchOption option);
-        Task<IList<FileItem>> FindDirectories(string path, string pattern, SearchOption option);
+        Task<IList<FileItem>> FindFileItemsAsync(string path,string pattern, SearchOption option);
+        Task<IList<FileItem>> FindFilesAsync(string path, string pattern, SearchOption option);
+        Task<IList<FileItem>> FindDirectoriesAsync(string path, string pattern, SearchOption option);
     }
 }

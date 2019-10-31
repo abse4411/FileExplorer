@@ -27,7 +27,6 @@ namespace FileExplorer
             {
                 this.FileList.Columns.Add(header);
             }
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -35,9 +34,9 @@ namespace FileExplorer
             var path = this.PathTb.Text;
             if (string.IsNullOrWhiteSpace(path))
                 return;
-            
-            this.FileList.BeginUpdate();
+
             this.FileList.Items.Clear();
+            this.FileList.BeginUpdate();
             var list =await Service.GetFileItemsAsync(path);
             var items =await ListViewItemFactory.GetDetailItemsAsync(list);
             foreach (var item in items)
@@ -45,27 +44,41 @@ namespace FileExplorer
                 this.FileList.Items.Add(item);
             }
             this.FileList.EndUpdate();
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            var nodes = TreeNodeFactory.GetNodes(path);
+            this.FileTree.Nodes.Clear();
+            this.FileTree.BeginUpdate();
+            foreach (var node in nodes)
+            {
+                this.FileTree.Nodes.Add(node);
+            }
+            this.FileTree.EndUpdate();
+
         }
 
         private void DetailBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.Details;
+            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         private void SmallBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.SmallIcon;
+            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
         }
 
         private void LargeBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.LargeIcon;
+            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
         }
 
         private void ListBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.List;
+            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
     }
 }

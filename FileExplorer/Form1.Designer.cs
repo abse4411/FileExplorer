@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.FileList = new System.Windows.Forms.ListView();
             this.PathTb = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.SmallIconList = new System.Windows.Forms.ImageList(this.components);
@@ -39,26 +38,18 @@
             this.SmallBtn = new System.Windows.Forms.Button();
             this.LargeBtn = new System.Windows.Forms.Button();
             this.ListBtn = new System.Windows.Forms.Button();
+            this.FileList = new System.Windows.Forms.ListView();
             this.FileTree = new System.Windows.Forms.TreeView();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // FileList
-            // 
-            this.FileList.AllowColumnReorder = true;
-            this.FileList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.FileList.FullRowSelect = true;
-            this.FileList.HideSelection = false;
-            this.FileList.Location = new System.Drawing.Point(293, 75);
-            this.FileList.Name = "FileList";
-            this.FileList.Size = new System.Drawing.Size(738, 533);
-            this.FileList.TabIndex = 0;
-            this.FileList.UseCompatibleStateImageBehavior = false;
             // 
             // PathTb
             // 
-            this.PathTb.Location = new System.Drawing.Point(12, 33);
+            this.PathTb.Location = new System.Drawing.Point(38, 33);
             this.PathTb.Name = "PathTb";
             this.PathTb.Size = new System.Drawing.Size(413, 25);
             this.PathTb.TabIndex = 1;
@@ -127,38 +118,69 @@
             this.ListBtn.UseVisualStyleBackColor = true;
             this.ListBtn.Click += new System.EventHandler(this.ListBtn_Click);
             // 
+            // FileList
+            // 
+            this.FileList.AllowColumnReorder = true;
+            this.FileList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileList.FullRowSelect = true;
+            this.FileList.HideSelection = false;
+            this.FileList.Location = new System.Drawing.Point(0, 0);
+            this.FileList.Name = "FileList";
+            this.FileList.Size = new System.Drawing.Size(815, 509);
+            this.FileList.TabIndex = 0;
+            this.FileList.UseCompatibleStateImageBehavior = false;
+            // 
             // FileTree
             // 
-            this.FileTree.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.FileTree.Location = new System.Drawing.Point(12, 75);
+            this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileTree.Location = new System.Drawing.Point(0, 0);
             this.FileTree.Name = "FileTree";
-            this.FileTree.Size = new System.Drawing.Size(262, 533);
+            this.FileTree.Size = new System.Drawing.Size(200, 509);
             this.FileTree.TabIndex = 7;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(12, 99);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.FileTree);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.FileList);
+            this.splitContainer1.Size = new System.Drawing.Size(1019, 509);
+            this.splitContainer1.SplitterDistance = 200;
+            this.splitContainer1.TabIndex = 8;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1043, 620);
-            this.Controls.Add(this.FileTree);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.ListBtn);
             this.Controls.Add(this.LargeBtn);
             this.Controls.Add(this.SmallBtn);
             this.Controls.Add(this.DetailBtn);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.PathTb);
-            this.Controls.Add(this.FileList);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView FileList;
         private System.Windows.Forms.TextBox PathTb;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ImageList SmallIconList;
@@ -167,7 +189,9 @@
         private System.Windows.Forms.Button SmallBtn;
         private System.Windows.Forms.Button LargeBtn;
         private System.Windows.Forms.Button ListBtn;
+        private System.Windows.Forms.ListView FileList;
         private System.Windows.Forms.TreeView FileTree;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
 

@@ -45,9 +45,7 @@
     <Compile Include="Services\EnumerateFileItemOption.cs" />
     <Compile Include="Services\FileService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Factories\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\FileExplorer.Core\FileExplorer.Core.csproj">
       <Project>{7aa98663-468d-4352-be9b-41dcf19a30aa}</Project>

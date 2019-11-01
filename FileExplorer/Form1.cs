@@ -80,6 +80,7 @@ namespace FileExplorer
             Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
         }
 
+        #region Hidden
         private void DetailBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.Details;
@@ -106,6 +107,8 @@ namespace FileExplorer
             this.FileList.View = View.List;
             //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
+        #endregion
+
 
         private async void TreeView_LoadRoots()
         {
@@ -249,35 +252,44 @@ namespace FileExplorer
 
         private async void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
-            var targetNode = e.Node;
-            if (targetNode != null)
-            {
-                if (targetNode.Tag is string type)
-                {
-                    switch (type)
-                    {
-                        case FactoryConstants.Driver:
-                        case FactoryConstants.Folder:
-                            this.FileTree.BeginUpdate();
-                            foreach (TreeNode node in targetNode.Nodes)
-                            {
-                                if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
-                                {
-                                    node.Nodes.Clear();
-                                    var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
-                                    foreach (var n in nodes)
-                                    {
-                                        node.Nodes.Add(n);
-                                    }
-                                }
-                            }
-                            this.FileTree.EndUpdate();
-                            break;
-                        default:
-                            return;
-                    }
-                }
-            }
+            //var targetNode = e.Node;
+            //if (targetNode != null)
+            //{
+            //    if (targetNode.Tag is string type)
+            //    {
+            //        switch (type)
+            //        {
+            //            case FactoryConstants.Driver:
+            //            case FactoryConstants.Folder:
+            //            case FactoryConstants.PC:
+            //                this.FileTree.BeginUpdate();
+            //                targetNode.Nodes.Clear();
+            //                IList<TreeNode> newNodes;
+            //                if (type ==FactoryConstants.PC)
+            //                    newNodes =await TreeNodeFactory.GetRootNodesAsync();
+            //                else
+            //                    newNodes = await TreeNodeFactory.GetNodesAsync(targetNode.Name);
+            //                foreach (var n in newNodes)
+            //                    targetNode.Nodes.Add(n);
+            //                foreach (TreeNode node in targetNode.Nodes)
+            //                {
+            //                    if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
+            //                    {
+            //                        node.Nodes.Clear();
+            //                        var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
+            //                        foreach (var n in nodes)
+            //                        {
+            //                            node.Nodes.Add(n);
+            //                        }
+            //                    }
+            //                }
+            //                this.FileTree.EndUpdate();
+            //                break;
+            //            default:
+            //                return;
+            //        }
+            //    }
+            //}
         }
 
         private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -311,5 +323,47 @@ namespace FileExplorer
             }
         }
 
+        private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
+        {
+            //var targetNode = e.Node;
+            //if (targetNode != null)
+            //{
+            //    if (targetNode.Tag is string type)
+            //    {
+            //        switch (type)
+            //        {
+            //            case FactoryConstants.Driver:
+            //            case FactoryConstants.Folder:
+            //            case FactoryConstants.PC:
+            //                this.FileTree.BeginUpdate();
+            //                targetNode.Nodes.Clear();
+            //                IList<TreeNode> newNodes;
+            //                if (type == FactoryConstants.PC)
+            //                    newNodes = await TreeNodeFactory.GetRootNodesAsync();
+            //                else
+            //                    newNodes = await TreeNodeFactory.GetNodesAsync(targetNode.Name);
+            //                foreach (var n in newNodes)
+            //                    targetNode.Nodes.Add(n);
+            //                foreach (TreeNode node in targetNode.Nodes)
+            //                {
+            //                    if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
+            //                    {
+            //                        node.Nodes.Clear();
+            //                        var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
+            //                        foreach (var n in nodes)
+            //                        {
+            //                            node.Nodes.Add(n);
+            //                        }
+            //                    }
+            //                }
+            //                this.FileTree.EndUpdate();
+            //                break;
+            //            default:
+            //                return;
+            //        }
+            //    }
+            //}
+            Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree,e.Node));
+        }
     }
 }

@@ -25,5 +25,10 @@ namespace FileExplorer.Factories
         {
             return new LoadListCommand(cache, listView, pathTbBox, service);
         }
+        
+        public static LoadTreeCommand GetLoadTreeCommand(TreeView treeView, TreeNode targetNode)
+        {
+            return new LoadTreeCommand(treeView, targetNode);
+        }
     }
 }

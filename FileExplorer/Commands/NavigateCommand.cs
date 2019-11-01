@@ -37,8 +37,8 @@ namespace FileExplorer.Commands
 
         protected void ListView_LoadRoots()
         {
-            ListView.Clear();
             ListView.BeginUpdate();
+            ListView.Clear();
             var headers = ListViewItemFactory.GetDriverHeaderItems();
             foreach (var header in headers)
             {
@@ -56,8 +56,8 @@ namespace FileExplorer.Commands
         {
             if (!Directory.Exists(path))
                 return;
-            ListView.Clear();
             ListView.BeginUpdate();
+            ListView.Clear();
             var headers = ListViewItemFactory.GetFIleHeaderItems();
             foreach (var header in headers)
             {

@@ -146,7 +146,6 @@
             this.FileTree.ShowNodeToolTips = true;
             this.FileTree.Size = new System.Drawing.Size(200, 509);
             this.FileTree.TabIndex = 7;
-            this.FileTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.FileTree_BeforeExpand);
             this.FileTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterExpand);
             this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterSelect);
             // 

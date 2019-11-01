@@ -17,8 +17,8 @@ namespace FileExplorer
         public IFileService Service { get; }
         public PathHistoryCache Cache { get; }
         public CommandManager Invoker { get; }
-        public List<string> PathHistory { get; private set; }
-        public int HistoryMark { get; private set; }
+        //public List<string> PathHistory { get; private set; }
+        //public int HistoryMark { get; private set; }
         private ListViewColumnSorter lvwColumnSorter;
 
         public Form1()
@@ -27,8 +27,8 @@ namespace FileExplorer
             Service = new FileService();
             Cache = new PathHistoryCache();
             Invoker = new CommandManager();
-            PathHistory = new List<string>(20);
-            HistoryMark = -1;
+            //PathHistory = new List<string>(20);
+            //HistoryMark = -1;
             lvwColumnSorter = new ListViewColumnSorter();
             this.FileList.ListViewItemSorter = lvwColumnSorter;
             PrepareData();
@@ -40,8 +40,8 @@ namespace FileExplorer
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
 
-            HistoryMark++;
-            PathHistory.Add(Environment.MachineName);
+            //HistoryMark++;
+            //PathHistory.Add(Environment.MachineName);
 
             Cache.HistoryMark++;
             Cache.PathHistory.Add(Environment.MachineName);
@@ -257,48 +257,6 @@ namespace FileExplorer
             //    ListView_LoadItems(path);
             //}
             Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, Service));
-        }
-
-        private  void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-        {
-            //var targetNode = e.Node;
-            //if (targetNode != null)
-            //{
-            //    if (targetNode.Tag is string type)
-            //    {
-            //        switch (type)
-            //        {
-            //            case FactoryConstants.Driver:
-            //            case FactoryConstants.Folder:
-            //            case FactoryConstants.PC:
-            //                this.FileTree.BeginUpdate();
-            //                targetNode.Nodes.Clear();
-            //                IList<TreeNode> newNodes;
-            //                if (type ==FactoryConstants.PC)
-            //                    newNodes =await TreeNodeFactory.GetRootNodesAsync();
-            //                else
-            //                    newNodes = await TreeNodeFactory.GetNodesAsync(targetNode.Name);
-            //                foreach (var n in newNodes)
-            //                    targetNode.Nodes.Add(n);
-            //                foreach (TreeNode node in targetNode.Nodes)
-            //                {
-            //                    if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
-            //                    {
-            //                        node.Nodes.Clear();
-            //                        var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
-            //                        foreach (var n in nodes)
-            //                        {
-            //                            node.Nodes.Add(n);
-            //                        }
-            //                    }
-            //                }
-            //                this.FileTree.EndUpdate();
-            //                break;
-            //            default:
-            //                return;
-            //        }
-            //    }
-            //}
         }
 
         private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)

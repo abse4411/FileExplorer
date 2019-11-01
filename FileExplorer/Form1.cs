@@ -44,7 +44,7 @@ namespace FileExplorer
                 this.FileList.Items.Add(item);
             }
             this.FileList.EndUpdate();
-            var nodes = TreeNodeFactory.GetNodes(path);
+            var nodes =await TreeNodeFactory.GetRootNodesAsync();
             this.FileTree.Nodes.Clear();
             this.FileTree.BeginUpdate();
             foreach (var node in nodes)

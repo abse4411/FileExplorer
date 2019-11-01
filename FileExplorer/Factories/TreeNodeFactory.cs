@@ -11,31 +11,92 @@ namespace FileExplorer.Factories
 {
     public static class TreeNodeFactory
     {
-        public static IList<TreeNode> GetNodes(string path)
+        public static async Task<IList<TreeNode>> GetRootNodesAsync()
         {
-            var result = new List<TreeNode>();
-            var dirs = Directory.EnumerateDirectories(path);
-            foreach (var dir in dirs)
+            return await Task.Run(() =>
             {
-                var node = new TreeNode(dir, 0, 0);
-                var subDirs= Directory.EnumerateDirectories(Path.Combine(path,dir));
-                foreach (var item in subDirs)
+                var result = new List<TreeNode>();
+                var roots = Environment.GetLogicalDrives();
+                foreach (var root in roots)
                 {
-                    node.Nodes.Add(new TreeNode(item, 0, 0));
+                    var node = new TreeNode(root, 2, 2)
+                    {
+                        Tag = FactoryConstants.Folder,
+                        ToolTipText = root
+                    };
+                    var subDirs = Directory.EnumerateDirectories(root);
+                    foreach (var item in subDirs)
+                    {
+                        var name = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                        node.Nodes.Add(new TreeNode(name, 0, 0)
+                        {
+                            Tag = FactoryConstants.Folder,
+                            ToolTipText = name
+                        });
+                    }
+
+                    var subFiles = Directory.EnumerateFiles(root);
+                    foreach (var item in subFiles)
+                    {
+                        var name = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                        node.Nodes.Add(new TreeNode(name, 1, 1)
+                        {
+                            Tag = FactoryConstants.File,
+                            ToolTipText = name
+                        });
+                    }
+
+                    result.Add(node);
                 }
-                var subFiles = Directory.EnumerateFiles(Path.Combine(path, dir));
-                foreach (var item in subFiles)
-                {
-                    node.Nodes.Add(new TreeNode(item, 1, 1));
-                }
-                result.Add(node);
-            }
-            var files = Directory.EnumerateFiles(path);
-            foreach (var file in files)
+                return result;
+            });
+
+        }
+        public static async Task<IList<TreeNode>> GetNodesAsync(string path)
+        {
+            return await Task.Run(() =>
             {
-                result.Add(new TreeNode(file, 1, 1));
-            }
-            return result;
+                var result = new List<TreeNode>();
+                var dirs = Directory.EnumerateDirectories(path);
+                foreach (var dir in dirs)
+                {
+                    var name = dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                    var node = new TreeNode(dir, 0, 0)
+                    {
+                        ToolTipText = name
+                    };
+                    var subDirs = Directory.EnumerateDirectories(Path.Combine(path, dir));
+                    foreach (var item in subDirs)
+                    {
+                        var itemName = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                        node.Nodes.Add(new TreeNode(itemName, 0, 0)
+                        {
+                            Tag = FactoryConstants.Folder,
+                            ToolTipText = itemName
+                        });
+                    }
+
+                    var subFiles = Directory.EnumerateFiles(Path.Combine(path, dir));
+                    foreach (var item in subFiles)
+                    {
+                        var itemName = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                        node.Nodes.Add(new TreeNode(itemName, 1, 1)
+                        {
+                            Tag = FactoryConstants.File,
+                            ToolTipText = itemName
+                        });
+                    }
+
+                    result.Add(node);
+                }
+                var files = Directory.EnumerateFiles(path);
+                foreach (var file in files)
+                {
+                    var itemName = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                    result.Add(new TreeNode(itemName, 1, 1));
+                }
+                return result;
+            });
         }
     }
 }

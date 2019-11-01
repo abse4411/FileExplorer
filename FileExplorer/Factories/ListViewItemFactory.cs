@@ -40,16 +40,19 @@ namespace FileExplorer.Factories
                     lvi.SubItems.Add(item.CreationTime.ToLongDateString());
                     if (item.IsDirectory)
                     {
-                        lvi.SubItems.Add("Directory");
+                        lvi.SubItems.Add(FactoryConstants.Folder);
                         lvi.ImageIndex = 0;
                         lvi.SubItems.Add(string.Empty);
-
+                        lvi.Tag = FactoryConstants.Folder;
+                        lvi.ToolTipText = item.Name;
                     }
                     else
                     {
-                        lvi.SubItems.Add("File");
+                        lvi.SubItems.Add(FactoryConstants.File);
                         lvi.ImageIndex = 1;
                         lvi.SubItems.Add(item.Length.ToString());
+                        lvi.Tag = FactoryConstants.File;
+                        lvi.ToolTipText = item.Name;
                     }
                     result.Add(lvi);
                 }

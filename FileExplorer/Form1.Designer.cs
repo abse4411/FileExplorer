@@ -56,7 +56,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(440, 33);
+            this.button1.Location = new System.Drawing.Point(479, 34);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(117, 24);
             this.button1.TabIndex = 2;
@@ -70,6 +70,7 @@
             this.SmallIconList.TransparentColor = System.Drawing.Color.Transparent;
             this.SmallIconList.Images.SetKeyName(0, "folder_S.png");
             this.SmallIconList.Images.SetKeyName(1, "document_S.png");
+            this.SmallIconList.Images.SetKeyName(2, "hard-disk_S.png");
             // 
             // LargeIconList
             // 
@@ -80,7 +81,7 @@
             // 
             // DetailBtn
             // 
-            this.DetailBtn.Location = new System.Drawing.Point(573, 33);
+            this.DetailBtn.Location = new System.Drawing.Point(648, 34);
             this.DetailBtn.Name = "DetailBtn";
             this.DetailBtn.Size = new System.Drawing.Size(66, 24);
             this.DetailBtn.TabIndex = 3;
@@ -90,7 +91,7 @@
             // 
             // SmallBtn
             // 
-            this.SmallBtn.Location = new System.Drawing.Point(645, 34);
+            this.SmallBtn.Location = new System.Drawing.Point(720, 34);
             this.SmallBtn.Name = "SmallBtn";
             this.SmallBtn.Size = new System.Drawing.Size(66, 24);
             this.SmallBtn.TabIndex = 4;
@@ -100,7 +101,7 @@
             // 
             // LargeBtn
             // 
-            this.LargeBtn.Location = new System.Drawing.Point(717, 34);
+            this.LargeBtn.Location = new System.Drawing.Point(792, 34);
             this.LargeBtn.Name = "LargeBtn";
             this.LargeBtn.Size = new System.Drawing.Size(66, 24);
             this.LargeBtn.TabIndex = 5;
@@ -110,7 +111,7 @@
             // 
             // ListBtn
             // 
-            this.ListBtn.Location = new System.Drawing.Point(789, 33);
+            this.ListBtn.Location = new System.Drawing.Point(864, 33);
             this.ListBtn.Name = "ListBtn";
             this.ListBtn.Size = new System.Drawing.Size(66, 24);
             this.ListBtn.TabIndex = 6;
@@ -126,6 +127,7 @@
             this.FileList.HideSelection = false;
             this.FileList.Location = new System.Drawing.Point(0, 0);
             this.FileList.Name = "FileList";
+            this.FileList.ShowItemToolTips = true;
             this.FileList.Size = new System.Drawing.Size(815, 509);
             this.FileList.TabIndex = 0;
             this.FileList.UseCompatibleStateImageBehavior = false;
@@ -135,6 +137,7 @@
             this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileTree.Location = new System.Drawing.Point(0, 0);
             this.FileTree.Name = "FileTree";
+            this.FileTree.ShowNodeToolTips = true;
             this.FileTree.Size = new System.Drawing.Size(200, 509);
             this.FileTree.TabIndex = 7;
             // 

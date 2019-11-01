@@ -11,7 +11,7 @@ namespace FileExplorer
     public partial class Form1 : Form
     {
         public IFileService Service { get; }
-        public IList<string> PathHistory { get; private set; }
+        public List<string> PathHistory { get; private set; }
         public int HistoryMark { get; private set; }
 
         public Form1()
@@ -19,7 +19,7 @@ namespace FileExplorer
             InitializeComponent();
             Service = new FileService();
             PathHistory = new List<string>(20);
-            HistoryMark = 0;
+            HistoryMark = -1;
             PrepareData();
         }
 
@@ -28,37 +28,19 @@ namespace FileExplorer
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
+            this.PathTb.Text = Environment.MachineName;
 
             TreeView_LoadRoots();
             ListView_LoadRoots();
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            var path = this.PathTb.Text;
-            if (string.IsNullOrWhiteSpace(path))
-                return;
-
-            this.FileList.Items.Clear();
-            this.FileList.BeginUpdate();
-            var list = await Service.GetFileItemsAsync(path);
-            var items = await ListViewItemFactory.GetDetailItemsAsync(list);
-            foreach (var item in items)
-            {
-                this.FileList.Items.Add(item);
-            }
-            this.FileList.EndUpdate();
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-            var nodes = await TreeNodeFactory.GetRootNodesAsync();
-            this.FileTree.Nodes.Clear();
-            this.FileTree.BeginUpdate();
-            foreach (var node in nodes)
-            {
-                this.FileTree.Nodes.Add(node);
-            }
-            this.FileTree.EndUpdate();
-
+            HistoryMark++;
+            if (HistoryMark <= PathHistory.Count - 1)
+                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+            PathHistory.Add(this.PathTb.Text);
+            ListView_LoadItems(this.PathTb.Text);
         }
 
         private void DetailBtn_Click(object sender, EventArgs e)
@@ -92,11 +74,18 @@ namespace FileExplorer
         {
             this.FileTree.Nodes.Clear();
             this.FileTree.BeginUpdate();
+            var rootNode = new TreeNode(Environment.MachineName, 3, 3)
+            {
+                Tag = FactoryConstants.Driver,
+                ToolTipText = Environment.MachineName,
+                Name = Environment.MachineName
+            };
             var nodes = await TreeNodeFactory.GetRootNodesAsync();
             foreach (var node in nodes)
             {
-                this.FileTree.Nodes.Add(node);
+                rootNode.Nodes.Add(node);
             }
+            this.FileTree.Nodes.Add(rootNode);
             this.FileTree.EndUpdate();
         }
 
@@ -127,6 +116,7 @@ namespace FileExplorer
             if (!Directory.Exists(path))
                 return;
 
+            this.PathTb.Text = path;
             this.FileList.Clear();
             this.FileList.BeginUpdate();
             var headers = ListViewItemFactory.GetFIleHeaderItems();
@@ -155,7 +145,10 @@ namespace FileExplorer
                     {
                         case FactoryConstants.Folder:
                         case FactoryConstants.Driver:
-                            this.PathTb.Text = selectedItem.Name;
+                            HistoryMark++;
+                            if (HistoryMark <= PathHistory.Count - 1)
+                                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+                            PathHistory.Add(selectedItem.Name);
                             ListView_LoadItems(selectedItem.Name);
                             break;
                         case FactoryConstants.File:
@@ -171,7 +164,11 @@ namespace FileExplorer
         private void BackBtn_Click(object sender, EventArgs e)
         {
             if (HistoryMark <= 0)
+            {
+                ListView_LoadRoots();
+                this.PathTb.Text = Environment.MachineName;
                 return;
+            }
             HistoryMark--;
             var path = PathHistory[HistoryMark];
             this.PathTb.Text = path;
@@ -180,7 +177,7 @@ namespace FileExplorer
 
         private void ForwardBtn_Click(object sender, EventArgs e)
         {
-            if (HistoryMark >= PathHistory.Count)
+            if (HistoryMark >= PathHistory.Count - 1)
                 return;
             HistoryMark++;
             var path = PathHistory[HistoryMark];

@@ -73,6 +73,7 @@
             this.SmallIconList.Images.SetKeyName(0, "folder_S.png");
             this.SmallIconList.Images.SetKeyName(1, "document_S.png");
             this.SmallIconList.Images.SetKeyName(2, "hard-disk_S.png");
+            this.SmallIconList.Images.SetKeyName(3, "computer_S.png");
             // 
             // LargeIconList
             // 
@@ -114,7 +115,7 @@
             // 
             // ListBtn
             // 
-            this.ListBtn.Location = new System.Drawing.Point(965, 69);
+            this.ListBtn.Location = new System.Drawing.Point(936, 69);
             this.ListBtn.Name = "ListBtn";
             this.ListBtn.Size = new System.Drawing.Size(66, 24);
             this.ListBtn.TabIndex = 6;

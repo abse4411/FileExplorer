@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Assets\computer_S.png" />
     <Content Include="Assets\document_L.png" />
     <Content Include="Assets\document_S.png" />
     <Content Include="Assets\folder_L.png" />

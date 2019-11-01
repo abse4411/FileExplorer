@@ -46,8 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BackCommand.cs" />
+    <Compile Include="Commands\ForwardCommand.cs" />
+    <Compile Include="Commands\NavigateCommand.cs" />
+    <Compile Include="Commands\PathHistoryCache.cs" />
+    <Compile Include="Factories\CommandFactory.cs" />
     <Compile Include="Factories\FactoryConstants.cs" />
     <Compile Include="Factories\ListViewItemFactory.cs" />
+    <Compile Include="Factories\LoadCommand.cs" />
     <Compile Include="Factories\TreeNodeFactory.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

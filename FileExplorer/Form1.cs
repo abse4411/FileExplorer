@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using FileExplorer.Commands;
+using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
 using FileExplorer.Factories;
 using FileExplorer.Infrastructure.Services;
@@ -12,6 +14,8 @@ namespace FileExplorer
     public partial class Form1 : Form
     {
         public IFileService Service { get; }
+        public PathHistoryCache Cache { get; }
+        public CommandManager Invoker { get; }
         public List<string> PathHistory { get; private set; }
         public int HistoryMark { get; private set; }
 
@@ -19,16 +23,24 @@ namespace FileExplorer
         {
             InitializeComponent();
             Service = new FileService();
+            Cache=new PathHistoryCache();
+            Invoker =new CommandManager();
             PathHistory = new List<string>(20);
             HistoryMark = -1;
             PrepareData();
         }
 
-        private async void PrepareData()
+        private void PrepareData()
         {
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
+
+            HistoryMark++;
+            PathHistory.Add(Environment.MachineName);
+
+            Cache.HistoryMark++;
+            Cache.PathHistory.Add(Environment.MachineName);
 
             TreeView_LoadRoots();
             ListView_LoadRoots();
@@ -36,20 +48,36 @@ namespace FileExplorer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
-                return;
-            HistoryMark++;
-            if (HistoryMark <= PathHistory.Count - 1)
-                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-            PathHistory.Add(this.PathTb.Text);
-            if (this.PathTb.Text == Environment.MachineName)
-            {
-                ListView_LoadRoots();
-            }
-            else
-            {
-                ListView_LoadItems(this.PathTb.Text);
-            }
+            //if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
+            //    return;
+            //HistoryMark++;
+            //if (HistoryMark <= PathHistory.Count - 1)
+            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+            //PathHistory.Add(this.PathTb.Text);
+            //if (this.PathTb.Text == Environment.MachineName)
+            //{
+            //    ListView_LoadRoots();
+            //}
+            //else
+            //{
+            //    ListView_LoadItems(this.PathTb.Text);
+            //}
+
+            //if (Cache.HistoryMark > -1 && Cache.PathHistory[Cache.HistoryMark].Equals(this.PathTb.Text))
+            //    return;
+            //Cache.HistoryMark++;
+            //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
+            //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
+            //Cache.PathHistory.Add(this.PathTb.Text);
+            //if (this.PathTb.Text == Environment.MachineName)
+            //{
+            //    ListView_LoadRoots();
+            //}
+            //else
+            //{
+            //    ListView_LoadItems(this.PathTb.Text);
+            //}
+            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
         }
 
         private void DetailBtn_Click(object sender, EventArgs e)
@@ -155,10 +183,16 @@ namespace FileExplorer
                     {
                         case FactoryConstants.Folder:
                         case FactoryConstants.Driver:
-                            HistoryMark++;
-                            if (HistoryMark <= PathHistory.Count - 1)
-                                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-                            PathHistory.Add(selectedItem.Name);
+                            //HistoryMark++;
+                            //if (HistoryMark <= PathHistory.Count - 1)
+                            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+                            //PathHistory.Add(selectedItem.Name);
+                            //ListView_LoadItems(selectedItem.Name);
+
+                            Cache.HistoryMark++;
+                            if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
+                                Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
+                            Cache.PathHistory.Add(selectedItem.Name);
                             ListView_LoadItems(selectedItem.Name);
                             break;
                         case FactoryConstants.File:
@@ -173,40 +207,42 @@ namespace FileExplorer
 
         private void BackBtn_Click(object sender, EventArgs e)
         {
-            if (HistoryMark <= 0)
-            {
-                ListView_LoadRoots();
-                this.PathTb.Text = Environment.MachineName;
-                return;
-            }
-            HistoryMark--;
-            var path = PathHistory[HistoryMark];
-            this.PathTb.Text = path;
-            if (this.PathTb.Text == Environment.MachineName)
-            {
-                ListView_LoadRoots();
-            }
-            else
-            {
-                ListView_LoadItems(path);
-            }
+            //if (HistoryMark <= 0)
+            //{
+            //    ListView_LoadRoots();
+            //    this.PathTb.Text = Environment.MachineName;
+            //    return;
+            //}
+            //HistoryMark--;
+            //var path = PathHistory[HistoryMark];
+            //this.PathTb.Text = path;
+            //if (this.PathTb.Text == Environment.MachineName)
+            //{
+            //    ListView_LoadRoots();
+            //}
+            //else
+            //{
+            //    ListView_LoadItems(path);
+            //}
+            Invoker.Execute(CommandFactory.GetBackCommand(Cache,FileList,PathTb,Service));
         }
 
         private void ForwardBtn_Click(object sender, EventArgs e)
         {
-            if (HistoryMark >= PathHistory.Count - 1)
-                return;
-            HistoryMark++;
-            var path = PathHistory[HistoryMark];
-            this.PathTb.Text = path;
-            if (this.PathTb.Text == Environment.MachineName)
-            {
-                ListView_LoadRoots();
-            }
-            else
-            {
-                ListView_LoadItems(path);
-            }
+            //if (HistoryMark >-1 && HistoryMark >= PathHistory.Count - 1)
+            //    return;
+            //HistoryMark++;
+            //var path = PathHistory[HistoryMark];
+            //this.PathTb.Text = path;
+            //if (this.PathTb.Text == Environment.MachineName)
+            //{
+            //    ListView_LoadRoots();
+            //}
+            //else
+            //{
+            //    ListView_LoadItems(path);
+            //}
+            Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, Service));
         }
 
         private async void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)

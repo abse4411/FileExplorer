@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using FileExplorer.Core.Model;
+using FileExplorer.Core.Models;
 
 namespace FileExplorer.Factories
 {

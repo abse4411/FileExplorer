@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileExplorer.Core.Model;
+using FileExplorer.Core.Models;
 using FileExplorer.Core.Services;
 
 namespace FileExplorer.Infrastructure.Services

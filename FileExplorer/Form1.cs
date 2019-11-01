@@ -11,15 +11,15 @@ namespace FileExplorer
     public partial class Form1 : Form
     {
         public IFileService Service { get; }
-        public Stack<string> PathHistory { get; private set; }
+        public IList<string> PathHistory { get; private set; }
         public int HistoryMark { get; private set; }
 
         public Form1()
         {
             InitializeComponent();
             Service = new FileService();
-            PathHistory = new Stack<string>(20);
-            HistoryMark = -1;
+            PathHistory = new List<string>(20);
+            HistoryMark = 0;
             PrepareData();
         }
 
@@ -170,17 +170,22 @@ namespace FileExplorer
 
         private void BackBtn_Click(object sender, EventArgs e)
         {
-            if (HistoryMark < 0)
+            if (HistoryMark <= 0)
                 return;
-            //var item=PathHistory[]
-            //this.PathTb.Text = selectedItem.Name;
-            //ListView_LoadItems(selectedItem.Name);
+            HistoryMark--;
+            var path = PathHistory[HistoryMark];
+            this.PathTb.Text = path;
+            ListView_LoadItems(path);
         }
 
         private void ForwardBtn_Click(object sender, EventArgs e)
         {
             if (HistoryMark >= PathHistory.Count)
                 return;
+            HistoryMark++;
+            var path = PathHistory[HistoryMark];
+            this.PathTb.Text = path;
+            ListView_LoadItems(path);
         }
     }
 }

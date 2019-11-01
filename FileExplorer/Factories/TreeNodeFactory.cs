@@ -28,7 +28,7 @@ namespace FileExplorer.Factories
                         Name = root.RootDirectory.Name
                     };
                     AddFolderNodes(root.RootDirectory.EnumerateDirectories(), node.Nodes);
-                    AddFileNodes(root.RootDirectory.EnumerateFiles(), node.Nodes);
+                    //AddFileNodes(root.RootDirectory.EnumerateFiles(), node.Nodes);
 
                     result.Add(node);
                 }
@@ -63,7 +63,7 @@ namespace FileExplorer.Factories
                     try
                     {
                         AddFolderNodes(dir.EnumerateDirectories(), node.Nodes);
-                        AddFileNodes(dir.EnumerateFiles(), node.Nodes);
+                        //AddFileNodes(dir.EnumerateFiles(), node.Nodes);
                     }
                     catch (UnauthorizedAccessException e)
                     {
@@ -71,12 +71,13 @@ namespace FileExplorer.Factories
                     }
                     result.Add(node);
                 }
-                AddFileNodes(directory.EnumerateFiles(), result);
+                //AddFileNodes(directory.EnumerateFiles(), result);
                 return result;
             });
         }
 
-        private static void AddFileNodes(IEnumerable<FileInfo> files,IList list)
+        #region NotUse
+        private static void AddFileNodes(IEnumerable<FileInfo> files, IList list)
         {
             foreach (var item in files)
             {
@@ -88,6 +89,8 @@ namespace FileExplorer.Factories
                 });
             }
         }
+        #endregion
+
 
         private static void AddFolderNodes(IEnumerable<DirectoryInfo> dirs, IList list)
         {

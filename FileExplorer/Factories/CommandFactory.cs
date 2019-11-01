@@ -21,9 +21,9 @@ namespace FileExplorer.Factories
             return new ForwardCommand(cache, listView, pathTbBox, service);
         }
 
-        public static LoadCommand GetLoadCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
+        public static LoadListCommand GetLoadCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
         {
-            return new LoadCommand(cache, listView, pathTbBox, service);
+            return new LoadListCommand(cache, listView, pathTbBox, service);
         }
     }
 }

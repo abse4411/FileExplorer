@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using FileExplorer.Commands;
 using FileExplorer.Core.Services;
 
-namespace FileExplorer.Factories
+namespace FileExplorer.Commands
 {
-    public class LoadCommand : NavigateCommand
+    public class LoadListCommand : NavigateCommand
     {
-        public LoadCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service) : base(cache, listView, pathTbBox, service)
+        public LoadListCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service) : base(cache, listView, pathTbBox, service)
         {
         }
 

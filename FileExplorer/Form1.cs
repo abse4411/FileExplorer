@@ -126,10 +126,10 @@ namespace FileExplorer
             this.FileTree.EndUpdate();
         }
 
-        private void TreeView_LoadItems()
-        {
+        //private void TreeView_LoadItems()
+        //{
 
-        }
+        //}
 
         private void ListView_LoadRoots()
         {
@@ -149,28 +149,28 @@ namespace FileExplorer
             this.FileList.EndUpdate();
             this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
-        private async void ListView_LoadItems(string path)
-        {
-            if (!Directory.Exists(path))
-                return;
+        //private async void ListView_LoadItems(string path)
+        //{
+        //    if (!Directory.Exists(path))
+        //        return;
 
-            this.PathTb.Text = path;
-            this.FileList.Clear();
-            this.FileList.BeginUpdate();
-            var headers = ListViewItemFactory.GetFIleHeaderItems();
-            foreach (var header in headers)
-            {
-                this.FileList.Columns.Add(header);
-            }
-            var list = await Service.GetFileItemsAsync(path);
-            var items = await ListViewItemFactory.GetDetailItemsAsync(list);
-            foreach (var item in items)
-            {
-                this.FileList.Items.Add(item);
-            }
-            this.FileList.EndUpdate();
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        }
+        //    this.PathTb.Text = path;
+        //    this.FileList.Clear();
+        //    this.FileList.BeginUpdate();
+        //    var headers = ListViewItemFactory.GetFIleHeaderItems();
+        //    foreach (var header in headers)
+        //    {
+        //        this.FileList.Columns.Add(header);
+        //    }
+        //    var list = await Service.GetFileItemsAsync(path);
+        //    var items = await ListViewItemFactory.GetDetailItemsAsync(list);
+        //    foreach (var item in items)
+        //    {
+        //        this.FileList.Items.Add(item);
+        //    }
+        //    this.FileList.EndUpdate();
+        //    this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+        //}
 
         private void FileList_DoubleClick(object sender, EventArgs e)
         {
@@ -189,14 +189,16 @@ namespace FileExplorer
                             //PathHistory.Add(selectedItem.Name);
                             //ListView_LoadItems(selectedItem.Name);
 
-                            Cache.HistoryMark++;
-                            if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
-                                Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
-                            Cache.PathHistory.Add(selectedItem.Name);
-                            ListView_LoadItems(selectedItem.Name);
+                            //Cache.HistoryMark++;
+                            //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
+                            //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
+                            //Cache.PathHistory.Add(selectedItem.Name);
+                            //ListView_LoadItems(selectedItem.Name);
+                            PathTb.Text = selectedItem.Name;
+                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
                             break;
                         case FactoryConstants.File:
-                            System.Diagnostics.Process.Start(selectedItem.Name);
+                            Process.Start(selectedItem.Name);
                             break;
                         default:
                             return;
@@ -290,14 +292,16 @@ namespace FileExplorer
                         case FactoryConstants.Driver:
                         case FactoryConstants.Folder:
                         case FactoryConstants.PC:
-                            HistoryMark++;
-                            if (HistoryMark <= PathHistory.Count - 1)
-                                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-                            PathHistory.Add(selectedNode.Name);
-                            if(type.Equals(FactoryConstants.PC))
-                                ListView_LoadRoots();
-                            else
-                                ListView_LoadItems(selectedNode.Name);
+                            //HistoryMark++;
+                            //if (HistoryMark <= PathHistory.Count - 1)
+                            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+                            //PathHistory.Add(selectedNode.Name);
+                            //if(type.Equals(FactoryConstants.PC))
+                            //    ListView_LoadRoots();
+                            //else
+                            //    ListView_LoadItems(selectedNode.Name);
+                            PathTb.Text = selectedNode.Name;
+                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
                             break;
                         default:
                             return;

@@ -135,6 +135,7 @@
             this.FileList.Size = new System.Drawing.Size(815, 509);
             this.FileList.TabIndex = 0;
             this.FileList.UseCompatibleStateImageBehavior = false;
+            this.FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.FileList_ColumnClick);
             this.FileList.DoubleClick += new System.EventHandler(this.FileList_DoubleClick);
             // 
             // FileTree

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,15 +19,18 @@ namespace FileExplorer
         public CommandManager Invoker { get; }
         public List<string> PathHistory { get; private set; }
         public int HistoryMark { get; private set; }
+        private ListViewColumnSorter lvwColumnSorter;
 
         public Form1()
         {
             InitializeComponent();
             Service = new FileService();
-            Cache=new PathHistoryCache();
-            Invoker =new CommandManager();
+            Cache = new PathHistoryCache();
+            Invoker = new CommandManager();
             PathHistory = new List<string>(20);
             HistoryMark = -1;
+            lvwColumnSorter = new ListViewColumnSorter();
+            this.FileList.ListViewItemSorter = lvwColumnSorter;
             PrepareData();
         }
 
@@ -81,6 +85,7 @@ namespace FileExplorer
         }
 
         #region Hidden
+
         private void DetailBtn_Click(object sender, EventArgs e)
         {
             this.FileList.View = View.Details;
@@ -107,6 +112,7 @@ namespace FileExplorer
             this.FileList.View = View.List;
             //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
+
         #endregion
 
 
@@ -125,6 +131,7 @@ namespace FileExplorer
             {
                 rootNode.Nodes.Add(node);
             }
+
             this.FileTree.Nodes.Add(rootNode);
             this.FileTree.EndUpdate();
         }
@@ -144,11 +151,13 @@ namespace FileExplorer
             {
                 this.FileList.Columns.Add(header);
             }
+
             var items = ListViewItemFactory.GetRootDetailIItems();
             foreach (var item in items)
             {
                 this.FileList.Items.Add(item);
             }
+
             this.FileList.EndUpdate();
             this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
@@ -229,7 +238,7 @@ namespace FileExplorer
             //{
             //    ListView_LoadItems(path);
             //}
-            Invoker.Execute(CommandFactory.GetBackCommand(Cache,FileList,PathTb,Service));
+            Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, Service));
         }
 
         private void ForwardBtn_Click(object sender, EventArgs e)
@@ -250,7 +259,7 @@ namespace FileExplorer
             Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, Service));
         }
 
-        private async void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private  void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             //var targetNode = e.Node;
             //if (targetNode != null)
@@ -319,6 +328,7 @@ namespace FileExplorer
                             return;
                     }
                 }
+
                 this.FileTree.SelectedNode = null;
             }
         }
@@ -363,7 +373,103 @@ namespace FileExplorer
             //        }
             //    }
             //}
-            Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree,e.Node));
+            Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree, e.Node));
+        }
+
+        private class ListViewItemComparer : IComparer
+        {
+            private int col;
+
+            public int Compare(object x, object y)
+            {
+                int returnVal = -1;
+                returnVal = String.Compare(((ListViewItem) x).SubItems[col].Text,
+                    ((ListViewItem) y).SubItems[col].Text);
+                return returnVal;
+            }
+        }
+
+        private void FileList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+            this.FileList.Sort();
+        }
+
+        public class ListViewColumnSorter : IComparer
+        {
+
+            /// <summary>
+            /// Case insensitive comparer object
+            /// </summary>
+            private readonly CaseInsensitiveComparer _objectCompare;
+
+            /// <summary>
+            /// Class constructor.  Initializes various elements
+            /// </summary>
+            public ListViewColumnSorter()
+            {
+                // Initialize the column to '0'
+                SortColumn = 0;
+
+                // Initialize the sort order to 'none'
+                Order = SortOrder.None;
+
+                // Initialize the CaseInsensitiveComparer object
+                _objectCompare = new CaseInsensitiveComparer();
+            }
+
+            /// <summary>
+            /// This method is inherited from the IComparer interface.  It compares the two objects passed using a case insensitive comparison.
+            /// </summary>
+            /// <param name="x">First object to be compared</param>
+            /// <param name="y">Second object to be compared</param>
+            /// <returns>The result of the comparison. "0" if equal, negative if 'x' is less than 'y' and positive if 'x' is greater than 'y'</returns>
+            public int Compare(object x, object y)
+            {
+                // Cast the objects to be compared to ListViewItem objects
+                var itemX = (ListViewItem) x;
+                var itemY = (ListViewItem) y;
+
+                // Compare the two items
+                var compareResult = _objectCompare.Compare(itemX.SubItems[SortColumn].Text, itemY.SubItems[SortColumn].Text);
+
+                // Calculate correct return value based on object comparison
+                if (Order == SortOrder.Ascending)
+                {
+                    // Ascending sort is selected, return normal result of compare operation
+                    return compareResult;
+                }
+                else if (Order == SortOrder.Descending)
+                {
+                    // Descending sort is selected, return negative result of compare operation
+                    return (-compareResult);
+                }
+                else
+                {
+                    // Return '0' to indicate they are equal
+                    return 0;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets the number of the column to which to apply the sorting operation (Defaults to '0').
+            /// </summary>
+            public int SortColumn { set; get; }
+
+            /// <summary>
+            /// Gets or sets the order of sorting to apply (for example, 'Ascending' or 'Descending').
+            /// </summary>
+            public SortOrder Order { set; get; }
         }
     }
 }

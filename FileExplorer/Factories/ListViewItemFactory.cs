@@ -62,7 +62,7 @@ namespace FileExplorer.Factories
                     {
                         lvi.SubItems.Add(FactoryConstants.File);
                         lvi.ImageIndex = 1;
-                        lvi.SubItems.Add((item.Length/ FactoryConstants.SizeBase).ToString());
+                        lvi.SubItems.Add((item.Length/ FactoryConstants.KB).ToString());
                         lvi.Tag = FactoryConstants.File;
                         lvi.ToolTipText = item.Name;
                     }
@@ -89,10 +89,15 @@ namespace FileExplorer.Factories
             foreach (var root in roots)
             {
                 ListViewItem lvi = new ListViewItem($"{root.VolumeLabel} ({root.Name})");
+                lvi.ImageIndex = 2;
                 lvi.SubItems.Add(root.DriveType.ToString());
                 lvi.SubItems.Add(root.DriveFormat);
-                lvi.SubItems.Add(root.DriveFormat);
-
+                lvi.SubItems.Add(root.IsReady.ToString());
+                lvi.SubItems.Add((root.AvailableFreeSpace / FactoryConstants.GB).ToString());
+                lvi.SubItems.Add((root.TotalFreeSpace / FactoryConstants.GB).ToString());
+                lvi.SubItems.Add((root.TotalSize / FactoryConstants.GB).ToString());
+                lvi.Tag = FactoryConstants.Driver;
+                lvi.ToolTipText = root.Name;
                 result.Add(lvi);
             }
             return result;

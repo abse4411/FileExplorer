@@ -48,7 +48,7 @@ namespace FileExplorer.Factories
                     {
                         Tag = FactoryConstants.Folder,
                         ToolTipText = dir.Name,
-                        Name = dir.Name
+                        Name = dir.FullName
                     };
                     AddFolderNodes(dir.EnumerateDirectories(), node.Nodes);
                     AddFileNodes(dir.EnumerateFiles(), node.Nodes);
@@ -67,7 +67,7 @@ namespace FileExplorer.Factories
                 {
                     Tag = FactoryConstants.File,
                     ToolTipText = item.Name,
-                    Name = item.Name
+                    Name = item.FullName
                 });
             }
         }
@@ -80,7 +80,7 @@ namespace FileExplorer.Factories
                 {
                     Tag = FactoryConstants.Folder,
                     ToolTipText = item.Name,
-                    Name = item.Name
+                    Name = item.FullName
                 });
             }
         }

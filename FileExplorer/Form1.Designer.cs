@@ -78,6 +78,7 @@
             this.LargeIconList.TransparentColor = System.Drawing.Color.Transparent;
             this.LargeIconList.Images.SetKeyName(0, "folder_L.png");
             this.LargeIconList.Images.SetKeyName(1, "document_L.png");
+            this.LargeIconList.Images.SetKeyName(2, "hard-disk_L.png");
             // 
             // DetailBtn
             // 

@@ -41,6 +41,8 @@
             this.FileList = new System.Windows.Forms.ListView();
             this.FileTree = new System.Windows.Forms.TreeView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.BackBtn = new System.Windows.Forms.Button();
+            this.ForwardBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -49,16 +51,16 @@
             // 
             // PathTb
             // 
-            this.PathTb.Location = new System.Drawing.Point(38, 33);
+            this.PathTb.Location = new System.Drawing.Point(216, 34);
             this.PathTb.Name = "PathTb";
-            this.PathTb.Size = new System.Drawing.Size(413, 25);
+            this.PathTb.Size = new System.Drawing.Size(509, 25);
             this.PathTb.TabIndex = 1;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(479, 34);
+            this.button1.Location = new System.Drawing.Point(741, 34);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 24);
+            this.button1.Size = new System.Drawing.Size(117, 25);
             this.button1.TabIndex = 2;
             this.button1.Text = "LoadBtn";
             this.button1.UseVisualStyleBackColor = true;
@@ -82,7 +84,7 @@
             // 
             // DetailBtn
             // 
-            this.DetailBtn.Location = new System.Drawing.Point(648, 34);
+            this.DetailBtn.Location = new System.Drawing.Point(720, 69);
             this.DetailBtn.Name = "DetailBtn";
             this.DetailBtn.Size = new System.Drawing.Size(66, 24);
             this.DetailBtn.TabIndex = 3;
@@ -92,7 +94,7 @@
             // 
             // SmallBtn
             // 
-            this.SmallBtn.Location = new System.Drawing.Point(720, 34);
+            this.SmallBtn.Location = new System.Drawing.Point(792, 69);
             this.SmallBtn.Name = "SmallBtn";
             this.SmallBtn.Size = new System.Drawing.Size(66, 24);
             this.SmallBtn.TabIndex = 4;
@@ -102,7 +104,7 @@
             // 
             // LargeBtn
             // 
-            this.LargeBtn.Location = new System.Drawing.Point(792, 34);
+            this.LargeBtn.Location = new System.Drawing.Point(864, 69);
             this.LargeBtn.Name = "LargeBtn";
             this.LargeBtn.Size = new System.Drawing.Size(66, 24);
             this.LargeBtn.TabIndex = 5;
@@ -112,7 +114,7 @@
             // 
             // ListBtn
             // 
-            this.ListBtn.Location = new System.Drawing.Point(864, 33);
+            this.ListBtn.Location = new System.Drawing.Point(965, 69);
             this.ListBtn.Name = "ListBtn";
             this.ListBtn.Size = new System.Drawing.Size(66, 24);
             this.ListBtn.TabIndex = 6;
@@ -132,6 +134,7 @@
             this.FileList.Size = new System.Drawing.Size(815, 509);
             this.FileList.TabIndex = 0;
             this.FileList.UseCompatibleStateImageBehavior = false;
+            this.FileList.DoubleClick += new System.EventHandler(this.FileList_DoubleClick);
             // 
             // FileTree
             // 
@@ -161,11 +164,33 @@
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 8;
             // 
+            // BackBtn
+            // 
+            this.BackBtn.Location = new System.Drawing.Point(12, 34);
+            this.BackBtn.Name = "BackBtn";
+            this.BackBtn.Size = new System.Drawing.Size(96, 25);
+            this.BackBtn.TabIndex = 9;
+            this.BackBtn.Text = "BackBtn";
+            this.BackBtn.UseVisualStyleBackColor = true;
+            this.BackBtn.Click += new System.EventHandler(this.BackBtn_Click);
+            // 
+            // ForwardBtn
+            // 
+            this.ForwardBtn.Location = new System.Drawing.Point(114, 34);
+            this.ForwardBtn.Name = "ForwardBtn";
+            this.ForwardBtn.Size = new System.Drawing.Size(98, 25);
+            this.ForwardBtn.TabIndex = 10;
+            this.ForwardBtn.Text = "ForwardBtn";
+            this.ForwardBtn.UseVisualStyleBackColor = true;
+            this.ForwardBtn.Click += new System.EventHandler(this.ForwardBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1043, 620);
+            this.Controls.Add(this.ForwardBtn);
+            this.Controls.Add(this.BackBtn);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.ListBtn);
             this.Controls.Add(this.LargeBtn);
@@ -196,6 +221,8 @@
         private System.Windows.Forms.ListView FileList;
         private System.Windows.Forms.TreeView FileTree;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button BackBtn;
+        private System.Windows.Forms.Button ForwardBtn;
     }
 }
 

@@ -49,7 +49,7 @@ namespace FileExplorer.Factories
                     lvi.SubItems.Add(item.LastWriteTime.ToString(CultureInfo.CurrentCulture));
                     lvi.SubItems.Add(item.LastAccessTime.ToString(CultureInfo.CurrentCulture));
                     lvi.SubItems.Add(item.CreationTime.ToLongDateString());
-                    lvi.Name = item.Name;
+                    lvi.Name = item.FullName;
                     if (item.IsDirectory)
                     {
                         lvi.SubItems.Add(FactoryConstants.Folder);
@@ -96,6 +96,7 @@ namespace FileExplorer.Factories
                 lvi.SubItems.Add((root.AvailableFreeSpace / FactoryConstants.GB).ToString());
                 lvi.SubItems.Add((root.TotalFreeSpace / FactoryConstants.GB).ToString());
                 lvi.SubItems.Add((root.TotalSize / FactoryConstants.GB).ToString());
+                lvi.Name = root.RootDirectory.Name;
                 lvi.Tag = FactoryConstants.Driver;
                 lvi.ToolTipText = root.Name;
                 result.Add(lvi);

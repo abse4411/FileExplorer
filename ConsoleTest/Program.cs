@@ -12,14 +12,17 @@ namespace ConsoleTest
     {
         static void Main(string[] args)
         {
-            TestMethod();
-            //var drives=Directory.EnumerateDirectories(@"C:\");
-            //foreach (var drive in drives)
-            //{
-            //    Console.WriteLine(drive);
-            //}
-            //DirectoryInfo directory =new DirectoryInfo(@"C:\");
+            //TestMethod();
+            var items = Directory.EnumerateDirectories(@"C:\\");
+            if(Directory.Exists(@"C:\\"))
+                Console.WriteLine("Hello world");
+            foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
 
+
+            //DirectoryInfo directory = new DirectoryInfo(@"C:\");
             //DriveInfo[] allDrives = DriveInfo.GetDrives();
             //foreach (DriveInfo d in allDrives)
             //{
@@ -50,7 +53,7 @@ namespace ConsoleTest
         public static void TestMethod()
         {
             var s = new FileService();
-            var task = s.FindFileItemsAsync(@"G:\Xuefeng\OneDrive\个人\Code\ChengJiGuanLiXiTong\CJGLXT.App", "*",SearchOption.AllDirectories);
+            var task = s.FindFileItemsAsync(@"G:\\", "*",SearchOption.AllDirectories);
             task.Wait();
             var list = task.Result;
             foreach (var i in list)

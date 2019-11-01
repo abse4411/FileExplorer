@@ -11,6 +11,7 @@ namespace FileExplorer.Factories
         public const string File = "File";
         public const string Folder = "Folder";
         public const string Driver = "Driver";
+        public const string PC = "PC";
         public const long KB = 1024;
         public const long MB = 1024 * KB;
         public const long GB = 1024 * MB;

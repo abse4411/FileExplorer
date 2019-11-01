@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -40,8 +42,17 @@ namespace FileExplorer.Factories
             return await Task.Run(() =>
             {
                 var result = new List<TreeNode>();
-                DirectoryInfo directory=new DirectoryInfo(path);
-                var dirs = directory.EnumerateDirectories();
+                DirectoryInfo directory = new DirectoryInfo(path);
+                IEnumerable<DirectoryInfo> dirs;
+                try
+                {
+                    dirs = directory.EnumerateDirectories();
+                }
+                catch (UnauthorizedAccessException e)
+                {
+                    Debug.WriteLine(e);
+                    return result;
+                }
                 foreach (var dir in dirs)
                 {
                     var node = new TreeNode(dir.Name, 0, 0)
@@ -50,8 +61,15 @@ namespace FileExplorer.Factories
                         ToolTipText = dir.Name,
                         Name = dir.FullName
                     };
-                    AddFolderNodes(dir.EnumerateDirectories(), node.Nodes);
-                    AddFileNodes(dir.EnumerateFiles(), node.Nodes);
+                    try
+                    {
+                        AddFolderNodes(dir.EnumerateDirectories(), node.Nodes);
+                        AddFileNodes(dir.EnumerateFiles(), node.Nodes);
+                    }
+                    catch (UnauthorizedAccessException e)
+                    {
+                        Debug.WriteLine(e);
+                    }
                     result.Add(node);
                 }
                 AddFileNodes(directory.EnumerateFiles(), result);
@@ -76,6 +94,7 @@ namespace FileExplorer.Factories
         {
             foreach (var item in dirs)
             {
+                
                 list.Add(new TreeNode(item.Name, 0, 0)
                 {
                     Tag = FactoryConstants.Folder,

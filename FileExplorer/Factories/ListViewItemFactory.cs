@@ -12,31 +12,6 @@ namespace FileExplorer.Factories
 {
     static class ListViewItemFactory
     {
-        private static readonly IList<ColumnHeader> FIleHeaders;
-        private static readonly IList<ColumnHeader> DriverHeaders;
-        static ListViewItemFactory()
-        {
-            string[] headerStrings=new[] {"Name", "Last Write Time", "Last Access Time", "Creation Time", "Type" ,"Size(KB)"};
-            FIleHeaders = new List<ColumnHeader>();
-            foreach (var str in headerStrings)
-            {
-                FIleHeaders.Add(new ColumnHeader
-                {
-                    Text = str,
-                    TextAlign = HorizontalAlignment.Left
-                });
-            }
-            headerStrings = new[] { "Name", "Drive Type", "Drive Format", "IsReady", "Available Free Space(GB)", "Total Free Space(GB)", "Total Size(GB)" };
-            DriverHeaders = new List<ColumnHeader>();
-            foreach (var str in headerStrings)
-            {
-                DriverHeaders.Add(new ColumnHeader
-                {
-                    Text = str,
-                    TextAlign = HorizontalAlignment.Left
-                });
-            }
-        }
         public static async Task<IList<ListViewItem>> GetDetailItemsAsync(IList<FileItem> list)
         {
             return await Task.Run(() =>
@@ -74,12 +49,34 @@ namespace FileExplorer.Factories
 
         public static IList<ColumnHeader> GetFIleHeaderItems()
         {
-            return FIleHeaders;
+            var headerStrings = new[] { "Name", "Last Write Time", "Last Access Time", "Creation Time", "Type", "Size(KB)" };
+            var headers = new List<ColumnHeader>();
+            foreach (var str in headerStrings)
+            {
+                headers.Add(new ColumnHeader
+                {
+                    Text = str,
+                    TextAlign = HorizontalAlignment.Left
+                });
+            }
+
+            return headers;
         }
 
         public static IList<ColumnHeader> GetDriverHeaderItems()
         {
-            return DriverHeaders;
+            var headerStrings = new[] { "Name", "Drive Type", "Drive Format", "IsReady", "Available Free Space(GB)", "Total Free Space(GB)", "Total Size(GB)" };
+            var headers = new List<ColumnHeader>();
+            foreach (var str in headerStrings)
+            {
+                headers.Add(new ColumnHeader
+                {
+                    Text = str,
+                    TextAlign = HorizontalAlignment.Left
+                });
+            }
+
+            return headers;
         }
 
         public static IList<ListViewItem> GetRootDetailIItems()

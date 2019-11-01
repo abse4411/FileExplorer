@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using FileExplorer.Core.Services;
@@ -28,7 +29,6 @@ namespace FileExplorer
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
-            this.PathTb.Text = Environment.MachineName;
 
             TreeView_LoadRoots();
             ListView_LoadRoots();
@@ -36,11 +36,20 @@ namespace FileExplorer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
+                return;
             HistoryMark++;
             if (HistoryMark <= PathHistory.Count - 1)
                 PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
             PathHistory.Add(this.PathTb.Text);
-            ListView_LoadItems(this.PathTb.Text);
+            if (this.PathTb.Text == Environment.MachineName)
+            {
+                ListView_LoadRoots();
+            }
+            else
+            {
+                ListView_LoadItems(this.PathTb.Text);
+            }
         }
 
         private void DetailBtn_Click(object sender, EventArgs e)
@@ -76,7 +85,7 @@ namespace FileExplorer
             this.FileTree.BeginUpdate();
             var rootNode = new TreeNode(Environment.MachineName, 3, 3)
             {
-                Tag = FactoryConstants.Driver,
+                Tag = FactoryConstants.PC,
                 ToolTipText = Environment.MachineName,
                 Name = Environment.MachineName
             };
@@ -96,6 +105,7 @@ namespace FileExplorer
 
         private void ListView_LoadRoots()
         {
+            this.PathTb.Text = Environment.MachineName;
             this.FileList.Clear();
             this.FileList.BeginUpdate();
             var headers = ListViewItemFactory.GetDriverHeaderItems();
@@ -172,7 +182,14 @@ namespace FileExplorer
             HistoryMark--;
             var path = PathHistory[HistoryMark];
             this.PathTb.Text = path;
-            ListView_LoadItems(path);
+            if (this.PathTb.Text == Environment.MachineName)
+            {
+                ListView_LoadRoots();
+            }
+            else
+            {
+                ListView_LoadItems(path);
+            }
         }
 
         private void ForwardBtn_Click(object sender, EventArgs e)
@@ -182,7 +199,77 @@ namespace FileExplorer
             HistoryMark++;
             var path = PathHistory[HistoryMark];
             this.PathTb.Text = path;
-            ListView_LoadItems(path);
+            if (this.PathTb.Text == Environment.MachineName)
+            {
+                ListView_LoadRoots();
+            }
+            else
+            {
+                ListView_LoadItems(path);
+            }
         }
+
+        private async void FileTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        {
+            var targetNode = e.Node;
+            if (targetNode != null)
+            {
+                if (targetNode.Tag is string type)
+                {
+                    switch (type)
+                    {
+                        case FactoryConstants.Driver:
+                        case FactoryConstants.Folder:
+                            this.FileTree.BeginUpdate();
+                            foreach (TreeNode node in targetNode.Nodes)
+                            {
+                                if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
+                                {
+                                    node.Nodes.Clear();
+                                    var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
+                                    foreach (var n in nodes)
+                                    {
+                                        node.Nodes.Add(n);
+                                    }
+                                }
+                            }
+                            this.FileTree.EndUpdate();
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            }
+        }
+
+        private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            var selectedNode = this.FileTree.SelectedNode;
+            if (selectedNode != null)
+            {
+                if (selectedNode.Tag is string type)
+                {
+                    switch (type)
+                    {
+                        case FactoryConstants.Driver:
+                        case FactoryConstants.Folder:
+                        case FactoryConstants.PC:
+                            HistoryMark++;
+                            if (HistoryMark <= PathHistory.Count - 1)
+                                PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+                            PathHistory.Add(selectedNode.Name);
+                            if(type.Equals(FactoryConstants.PC))
+                                ListView_LoadRoots();
+                            else
+                                ListView_LoadItems(selectedNode.Name);
+                            break;
+                        default:
+                            return;
+                    }
+                }
+                this.FileTree.SelectedNode = null;
+            }
+        }
+
     }
 }

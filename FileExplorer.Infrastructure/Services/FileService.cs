@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -70,23 +71,31 @@ namespace FileExplorer.Infrastructure.Services
 
         private IList<FileItem> GetFileItems(string path,EnumerateFileItemOption option)
         {
+            var result = new List<FileItem>();
             var dir = new DirectoryInfo(path);
             IEnumerable<FileSystemInfo> list;
-            switch (option)
+            try
             {
-                case EnumerateFileItemOption.All:
-                    list = dir.EnumerateFileSystemInfos();
-                    break;
-                case EnumerateFileItemOption.File:
-                    list = dir.EnumerateFiles();
-                    break;
-                case EnumerateFileItemOption.Directory:
-                    list = dir.EnumerateDirectories();
-                    break;
-                default:
-                    throw new ArgumentException("Invalid value",nameof(option));
+                switch (option)
+                {
+                    case EnumerateFileItemOption.All:
+                        list = dir.EnumerateFileSystemInfos();
+                        break;
+                    case EnumerateFileItemOption.File:
+                        list = dir.EnumerateFiles();
+                        break;
+                    case EnumerateFileItemOption.Directory:
+                        list = dir.EnumerateDirectories();
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid value", nameof(option));
+                }
             }
-            var result = new List<FileItem>();
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return result;
+            }
             foreach (var item in list)
             {
                 result.Add(CreateFileItem(item));
@@ -98,21 +107,29 @@ namespace FileExplorer.Infrastructure.Services
         {
             var dir = new DirectoryInfo(path);
             IEnumerable<FileSystemInfo> list;
-            switch (fetchOption)
-            {
-                case EnumerateFileItemOption.All:
-                    list = dir.EnumerateFileSystemInfos(pattern,option);
-                    break;
-                case EnumerateFileItemOption.File:
-                    list = dir.EnumerateFiles(pattern, option);
-                    break;
-                case EnumerateFileItemOption.Directory:
-                    list = dir.EnumerateDirectories(pattern, option);
-                    break;
-                default:
-                    throw new ArgumentException("Invalid value", nameof(option));
-            }
             var result = new List<FileItem>();
+            try
+            {
+                switch (fetchOption)
+                {
+                    case EnumerateFileItemOption.All:
+                        list = dir.EnumerateFileSystemInfos(pattern, option);
+                        break;
+                    case EnumerateFileItemOption.File:
+                        list = dir.EnumerateFiles(pattern, option);
+                        break;
+                    case EnumerateFileItemOption.Directory:
+                        list = dir.EnumerateDirectories(pattern, option);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid value", nameof(option));
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return result;
+            }
             foreach (var item in list)
             {
                 result.Add(CreateFileItem(item));

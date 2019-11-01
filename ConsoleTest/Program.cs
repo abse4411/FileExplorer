@@ -13,8 +13,8 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
             //TestMethod();
-            var items = Directory.EnumerateDirectories(@"C:\\");
-            if(Directory.Exists(@"C:\\"))
+            var items = Directory.EnumerateDirectories(@"G:\System Volume Information");
+            if(Directory.Exists(@"G:\System Volume Information"))
                 Console.WriteLine("Hello world");
             foreach (var item in items)
             {

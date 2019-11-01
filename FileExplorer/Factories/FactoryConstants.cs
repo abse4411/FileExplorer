@@ -10,5 +10,7 @@ namespace FileExplorer.Factories
     {
         public const string File = "File";
         public const string Folder = "Folder";
+        public const string Driver = "Driver";
+        public const long SizeBase = 1024;
     }
 }

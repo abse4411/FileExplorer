@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +12,30 @@ namespace FileExplorer.Factories
 {
     static class ListViewItemFactory
     {
-        private static readonly IList<ColumnHeader> _headers;
+        private static readonly IList<ColumnHeader> FIleHeaders;
+        private static readonly IList<ColumnHeader> DriverHeaders;
         static ListViewItemFactory()
         {
-            string[] headerStrings=new[] {"Name", "LastWriteTime", "LastAccessTime", "CreationTime", "Type" ,"Size"};
-            _headers = new List<ColumnHeader>();
+            string[] headerStrings=new[] {"Name", "Last Write Time", "Last Access Time", "Creation Time", "Type" ,"Size(KB)"};
+            FIleHeaders = new List<ColumnHeader>();
             foreach (var str in headerStrings)
             {
-                _headers.Add(new ColumnHeader
+                FIleHeaders.Add(new ColumnHeader
                 {
                     Text = str,
                     TextAlign = HorizontalAlignment.Left
                 });
             }
-
+            headerStrings = new[] { "Name", "Drive Type", "Drive Format", "IsReady", "Available Free Space(GB)", "Total Free Space(GB)", "Total Size(GB)" };
+            DriverHeaders = new List<ColumnHeader>();
+            foreach (var str in headerStrings)
+            {
+                DriverHeaders.Add(new ColumnHeader
+                {
+                    Text = str,
+                    TextAlign = HorizontalAlignment.Left
+                });
+            }
         }
         public static async Task<IList<ListViewItem>> GetDetailItemsAsync(IList<FileItem> list)
         {
@@ -38,6 +49,7 @@ namespace FileExplorer.Factories
                     lvi.SubItems.Add(item.LastWriteTime.ToString(CultureInfo.CurrentCulture));
                     lvi.SubItems.Add(item.LastAccessTime.ToString(CultureInfo.CurrentCulture));
                     lvi.SubItems.Add(item.CreationTime.ToLongDateString());
+                    lvi.Name = item.Name;
                     if (item.IsDirectory)
                     {
                         lvi.SubItems.Add(FactoryConstants.Folder);
@@ -50,7 +62,7 @@ namespace FileExplorer.Factories
                     {
                         lvi.SubItems.Add(FactoryConstants.File);
                         lvi.ImageIndex = 1;
-                        lvi.SubItems.Add(item.Length.ToString());
+                        lvi.SubItems.Add((item.Length/ FactoryConstants.SizeBase).ToString());
                         lvi.Tag = FactoryConstants.File;
                         lvi.ToolTipText = item.Name;
                     }
@@ -60,9 +72,30 @@ namespace FileExplorer.Factories
             });
         }
 
-        public static IList<ColumnHeader> GetHeaderItems()
+        public static IList<ColumnHeader> GetFIleHeaderItems()
         {
-            return _headers;
+            return FIleHeaders;
+        }
+
+        public static IList<ColumnHeader> GetDriverHeaderItems()
+        {
+            return DriverHeaders;
+        }
+
+        public static IList<ListViewItem> GetRootDetailIItems()
+        {
+            var result = new List<ListViewItem>();
+            var roots = DriveInfo.GetDrives();
+            foreach (var root in roots)
+            {
+                ListViewItem lvi = new ListViewItem($"{root.VolumeLabel} ({root.Name})");
+                lvi.SubItems.Add(root.DriveType.ToString());
+                lvi.SubItems.Add(root.DriveFormat);
+                lvi.SubItems.Add(root.DriveFormat);
+
+                result.Add(lvi);
+            }
+            return result;
         }
     }
 }

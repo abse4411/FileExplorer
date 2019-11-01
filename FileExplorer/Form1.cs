@@ -22,7 +22,7 @@ namespace FileExplorer
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
-            var headers = ListViewItemFactory.GetHeaderItems();
+            var headers = ListViewItemFactory.GetFIleHeaderItems();
             foreach (var header in headers)
             {
                 this.FileList.Columns.Add(header);

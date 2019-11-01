@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,35 +17,17 @@ namespace FileExplorer.Factories
             return await Task.Run(() =>
             {
                 var result = new List<TreeNode>();
-                var roots = Environment.GetLogicalDrives();
+                var roots = DriveInfo.GetDrives();
                 foreach (var root in roots)
                 {
-                    var node = new TreeNode(root, 2, 2)
+                    var node = new TreeNode($"{root.VolumeLabel} ({root.Name})", 2, 2)
                     {
-                        Tag = FactoryConstants.Folder,
-                        ToolTipText = root
+                        Tag = FactoryConstants.Driver,
+                        ToolTipText = root.Name,
+                        Name = root.RootDirectory.Name
                     };
-                    var subDirs = Directory.EnumerateDirectories(root);
-                    foreach (var item in subDirs)
-                    {
-                        var name = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                        node.Nodes.Add(new TreeNode(name, 0, 0)
-                        {
-                            Tag = FactoryConstants.Folder,
-                            ToolTipText = name
-                        });
-                    }
-
-                    var subFiles = Directory.EnumerateFiles(root);
-                    foreach (var item in subFiles)
-                    {
-                        var name = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                        node.Nodes.Add(new TreeNode(name, 1, 1)
-                        {
-                            Tag = FactoryConstants.File,
-                            ToolTipText = name
-                        });
-                    }
+                    AddFolderNodes(root.RootDirectory.EnumerateDirectories(), node.Nodes);
+                    AddFileNodes(root.RootDirectory.EnumerateFiles(), node.Nodes);
 
                     result.Add(node);
                 }
@@ -57,46 +40,49 @@ namespace FileExplorer.Factories
             return await Task.Run(() =>
             {
                 var result = new List<TreeNode>();
-                var dirs = Directory.EnumerateDirectories(path);
+                DirectoryInfo directory=new DirectoryInfo(path);
+                var dirs = directory.EnumerateDirectories();
                 foreach (var dir in dirs)
                 {
-                    var name = dir.Substring(dir.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                    var node = new TreeNode(dir, 0, 0)
+                    var node = new TreeNode(dir.Name, 0, 0)
                     {
-                        ToolTipText = name
+                        Tag = FactoryConstants.Folder,
+                        ToolTipText = dir.Name,
+                        Name = dir.Name
                     };
-                    var subDirs = Directory.EnumerateDirectories(Path.Combine(path, dir));
-                    foreach (var item in subDirs)
-                    {
-                        var itemName = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                        node.Nodes.Add(new TreeNode(itemName, 0, 0)
-                        {
-                            Tag = FactoryConstants.Folder,
-                            ToolTipText = itemName
-                        });
-                    }
-
-                    var subFiles = Directory.EnumerateFiles(Path.Combine(path, dir));
-                    foreach (var item in subFiles)
-                    {
-                        var itemName = item.Substring(item.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                        node.Nodes.Add(new TreeNode(itemName, 1, 1)
-                        {
-                            Tag = FactoryConstants.File,
-                            ToolTipText = itemName
-                        });
-                    }
-
+                    AddFolderNodes(dir.EnumerateDirectories(), node.Nodes);
+                    AddFileNodes(dir.EnumerateFiles(), node.Nodes);
                     result.Add(node);
                 }
-                var files = Directory.EnumerateFiles(path);
-                foreach (var file in files)
-                {
-                    var itemName = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                    result.Add(new TreeNode(itemName, 1, 1));
-                }
+                AddFileNodes(directory.EnumerateFiles(), result);
                 return result;
             });
+        }
+
+        private static void AddFileNodes(IEnumerable<FileInfo> files,IList list)
+        {
+            foreach (var item in files)
+            {
+                list.Add(new TreeNode(item.Name, 1, 1)
+                {
+                    Tag = FactoryConstants.File,
+                    ToolTipText = item.Name,
+                    Name = item.Name
+                });
+            }
+        }
+
+        private static void AddFolderNodes(IEnumerable<DirectoryInfo> dirs, IList list)
+        {
+            foreach (var item in dirs)
+            {
+                list.Add(new TreeNode(item.Name, 0, 0)
+                {
+                    Tag = FactoryConstants.Folder,
+                    ToolTipText = item.Name,
+                    Name = item.Name
+                });
+            }
         }
     }
 }

@@ -40,5 +40,10 @@ namespace FileExplorer.Factories
         {
             return new RefreshCommand(cache, listView, path, service);
         }
+
+        public static SearchCommand GetSearchCommand(ListView listView, PathHistoryCache cache, string pattern, IFileService service)
+        {
+            return new SearchCommand( listView, cache, pattern,service);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,19 @@ namespace FileExplorer.Commands
             Cache.HistoryMark--;
             var path = Cache.PathHistory[Cache.HistoryMark];
             PathTbBox.Text = path;
-            if (path == Environment.MachineName)
-                ListView_LoadRoots();
-            else if (!await ListView_LoadItems(path))
+            try
             {
-                return new ExecuteResult(false, "Directory \"{path}\" does not exist");
+                if (path == Environment.MachineName)
+                    ListView_LoadRoots();
+                else if (!await ListView_LoadItems(path))
+                {
+                    return new ExecuteResult(false, "Directory \"{path}\" does not exist");
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return new ExecuteResult(false, e.Message);
             }
             return new ExecuteResult(true,String.Empty);
         }

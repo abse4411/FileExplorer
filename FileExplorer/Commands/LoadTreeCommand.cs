@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,15 @@ namespace FileExplorer.Commands
                             fatherNode.Nodes.Remove(TargetNode);
                             return new ExecuteResult(false, $"Directory \"{TargetNode.Name}\" does not exist");
                         }
-                        newNodes = await TreeNodeFactory.GetNodesAsync(TargetNode.Name);
+                        try
+                        {
+                            newNodes = await TreeNodeFactory.GetNodesAsync(TargetNode.Name);
+                        }
+                        catch (UnauthorizedAccessException e)
+                        {
+                            Debug.WriteLine(e);
+                            return new ExecuteResult(false, e.Message);
+                        }
                     }
                     TreeView.BeginUpdate();
                     foreach (var n in newNodes)
@@ -59,7 +68,16 @@ namespace FileExplorer.Commands
                                 TargetNode.Nodes.Remove(node);
                                 continue;
                             }
-                            var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
+                            IList<TreeNode> nodes;
+                            try
+                            {
+                                nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
+                            }
+                            catch (UnauthorizedAccessException e)
+                            {
+                                Debug.WriteLine(e);
+                                continue;
+                            }
                             TreeView.BeginUpdate();
                             foreach (var n in nodes)
                                 node.Nodes.Add(n);

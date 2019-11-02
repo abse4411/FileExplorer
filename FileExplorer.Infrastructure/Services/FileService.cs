@@ -14,7 +14,7 @@ namespace FileExplorer.Infrastructure.Services
     {
         public async Task<IList<FileItem>> GetFileItemsAsync(string path)
         {
-            return await Task.Run(() => GetFileItems(path,EnumerateFileItemOption.All));
+            return await Task.Run(() => GetFileItems(path, EnumerateFileItemOption.All));
         }
 
         public async Task<IList<FileItem>> GetFilesAsync(string path)
@@ -29,7 +29,7 @@ namespace FileExplorer.Infrastructure.Services
 
         public async Task<IList<FileItem>> FindFileItemsAsync(string path, string pattern, SearchOption option)
         {
-            return await Task.Run(() => GetFileItems(path,pattern, EnumerateFileItemOption.All,option));
+            return await Task.Run(() => GetFileItems(path, pattern, EnumerateFileItemOption.All, option));
         }
 
         public async Task<IList<FileItem>> FindFilesAsync(string path, string pattern, SearchOption option)
@@ -69,32 +69,25 @@ namespace FileExplorer.Infrastructure.Services
             return item;
         }
 
-        private IList<FileItem> GetFileItems(string path,EnumerateFileItemOption option)
+        private IList<FileItem> GetFileItems(string path, EnumerateFileItemOption option)
         {
             var result = new List<FileItem>();
             var dir = new DirectoryInfo(path);
             IEnumerable<FileSystemInfo> list;
-            try
+
+            switch (option)
             {
-                switch (option)
-                {
-                    case EnumerateFileItemOption.All:
-                        list = dir.EnumerateFileSystemInfos();
-                        break;
-                    case EnumerateFileItemOption.File:
-                        list = dir.EnumerateFiles();
-                        break;
-                    case EnumerateFileItemOption.Directory:
-                        list = dir.EnumerateDirectories();
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid value", nameof(option));
-                }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.WriteLine(e);
-                return result;
+                case EnumerateFileItemOption.All:
+                    list = dir.EnumerateFileSystemInfos();
+                    break;
+                case EnumerateFileItemOption.File:
+                    list = dir.EnumerateFiles();
+                    break;
+                case EnumerateFileItemOption.Directory:
+                    list = dir.EnumerateDirectories();
+                    break;
+                default:
+                    throw new ArgumentException("Invalid value", nameof(option));
             }
             foreach (var item in list)
             {
@@ -103,32 +96,25 @@ namespace FileExplorer.Infrastructure.Services
             return result;
         }
 
-        private IList<FileItem> GetFileItems(string path,string pattern, EnumerateFileItemOption fetchOption, SearchOption option)
+        private IList<FileItem> GetFileItems(string path, string pattern, EnumerateFileItemOption fetchOption, SearchOption option)
         {
             var dir = new DirectoryInfo(path);
             IEnumerable<FileSystemInfo> list;
             var result = new List<FileItem>();
-            try
+
+            switch (fetchOption)
             {
-                switch (fetchOption)
-                {
-                    case EnumerateFileItemOption.All:
-                        list = dir.EnumerateFileSystemInfos(pattern, option);
-                        break;
-                    case EnumerateFileItemOption.File:
-                        list = dir.EnumerateFiles(pattern, option);
-                        break;
-                    case EnumerateFileItemOption.Directory:
-                        list = dir.EnumerateDirectories(pattern, option);
-                        break;
-                    default:
-                        throw new ArgumentException("Invalid value", nameof(option));
-                }
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.WriteLine(e);
-                return result;
+                case EnumerateFileItemOption.All:
+                    list = dir.EnumerateFileSystemInfos(pattern, option);
+                    break;
+                case EnumerateFileItemOption.File:
+                    list = dir.EnumerateFiles(pattern, option);
+                    break;
+                case EnumerateFileItemOption.Directory:
+                    list = dir.EnumerateDirectories(pattern, option);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid value", nameof(option));
             }
             foreach (var item in list)
             {

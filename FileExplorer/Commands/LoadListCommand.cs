@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileExplorer.Core.Commands;
@@ -23,11 +24,19 @@ namespace FileExplorer.Commands
             if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
                 Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
             Cache.PathHistory.Add(Path);
-            if (Path == Environment.MachineName)
-                ListView_LoadRoots();
-            else if (!await ListView_LoadItems(Path))
+            try
             {
-                return new ExecuteResult(false, $"Directory \"{Path}\" does not exist");
+                if (Path == Environment.MachineName)
+                    ListView_LoadRoots();
+                else if (!await ListView_LoadItems(Path))
+                {
+                    return new ExecuteResult(false, $"Directory \"{Path}\" does not exist");
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return new ExecuteResult(false, e.Message);
             }
             return new ExecuteResult(true, String.Empty);
         }

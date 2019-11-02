@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,19 @@ namespace FileExplorer.Commands
                 Cache.HistoryMark++;
                 Cache.PathHistory.Add(Path);
             }
-            if (Path == Environment.MachineName)
-                ListView_LoadRoots();
-            else if (!await ListView_LoadItems(Path))
+            try
             {
-                return new ExecuteResult(false, $"Directory \"{Path}\" does not exist");
+                if (Path == Environment.MachineName)
+                    ListView_LoadRoots();
+                else if (!await ListView_LoadItems(Path))
+                {
+                    return new ExecuteResult(false, $"Directory \"{Path}\" does not exist");
+                }
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return new ExecuteResult(false, e.Message);
             }
             return new ExecuteResult(true, String.Empty);
         }

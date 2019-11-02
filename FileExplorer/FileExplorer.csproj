@@ -53,6 +53,7 @@
     <Compile Include="Commands\NavigateCommand.cs" />
     <Compile Include="Commands\PathHistoryCache.cs" />
     <Compile Include="Commands\RefreshCommand.cs" />
+    <Compile Include="Commands\SearchCommand.cs" />
     <Compile Include="Factories\CommandFactory.cs" />
     <Compile Include="Factories\FactoryConstants.cs" />
     <Compile Include="Factories\ListViewItemFactory.cs" />

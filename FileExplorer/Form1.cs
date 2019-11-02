@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Windows.Forms;
 using FileExplorer.Commands;
 using FileExplorer.Core.Commands;
@@ -30,15 +28,15 @@ namespace FileExplorer
             Cache = new PathHistoryCache();
             Invoker=new CommandManager();
             _lvwColumnSorter = new ListViewColumnSorter();
-            this.FileList.ListViewItemSorter = _lvwColumnSorter;
+            FileList.ListViewItemSorter = _lvwColumnSorter;
             PrepareData();
         }
 
         private async void PrepareData()
         {
-            this.FileTree.ImageList = this.SmallIconList;
-            this.FileList.SmallImageList = this.SmallIconList;
-            this.FileList.LargeImageList = this.LargeIconList;
+            FileTree.ImageList = SmallIconList;
+            FileList.SmallImageList = SmallIconList;
+            FileList.LargeImageList = LargeIconList;
             await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
         }
 
@@ -46,38 +44,38 @@ namespace FileExplorer
 
         private void DetailBtn_Click(object sender, EventArgs e)
         {
-            this.FileList.View = View.Details;
-            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            FileList.View = View.Details;
+            //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void SmallBtn_Click(object sender, EventArgs e)
         {
-            this.FileList.View = View.SmallIcon;
-            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            FileList.View = View.SmallIcon;
+            //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
         }
 
         private void LargeBtn_Click(object sender, EventArgs e)
         {
-            this.FileList.View = View.LargeIcon;
-            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            FileList.View = View.LargeIcon;
+            //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
 
         }
 
         private void ListBtn_Click(object sender, EventArgs e)
         {
-            this.FileList.View = View.List;
-            //this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            FileList.View = View.List;
+            //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
         #endregion
 
         private async void FileList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.FileList.SelectedItems.Count == 1)
+            if (FileList.SelectedItems.Count == 1)
             {
-                var selectedItem = this.FileList.SelectedItems[0];
+                var selectedItem = FileList.SelectedItems[0];
                 if (selectedItem.Tag is string type)
                 {
                     switch (type)
@@ -117,7 +115,7 @@ namespace FileExplorer
         {
             //Count++;
             //Debug.WriteLine($"========={Count}");
-            var selectedNode = this.FileTree.SelectedNode;
+            var selectedNode = FileTree.SelectedNode;
             if (selectedNode != null)
             {
                 if (selectedNode.Tag is string type)
@@ -138,14 +136,14 @@ namespace FileExplorer
                 }
             }
 
-            //this.FileTree.SelectedNode = null;
+            //FileTree.SelectedNode = null;
         }
 
         private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
             if(e.Node==null)
                 return;
-            var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree, e.Node));
+            var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(FileTree, e.Node));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
         }
@@ -231,7 +229,7 @@ namespace FileExplorer
                 _lvwColumnSorter.SortColumn = e.Column;
                 _lvwColumnSorter.Order = SortOrder.Ascending;
             }
-            this.FileList.Sort();
+            FileList.Sort();
         }
         #endregion
 
@@ -251,6 +249,32 @@ namespace FileExplorer
             var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
+        }
+
+        private async void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBox.SelectedItem.ToString()))
+            {
+                SearchBox.Items.Remove(SearchBox.SelectedItem.ToString());
+                return;
+            }
+            var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
+            if (!result.IsSuccessful)
+                DialogService.ShowErrorDialog("Error", result.Message);
+        }
+
+        private async void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if(string.IsNullOrWhiteSpace(SearchBox.Text))
+                    return;
+                SearchBox.Items.Add(SearchBox.Text);
+                var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text,FileService));
+                if (!result.IsSuccessful)
+                    DialogService.ShowErrorDialog("Error", result.Message);
+                e.Handled = true;
+            }
         }
     }
 }

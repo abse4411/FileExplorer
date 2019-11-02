@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +27,16 @@ namespace FileExplorer.Commands
             PathTb.Text = Environment.MachineName;
             Cache.HistoryMark++;
             Cache.PathHistory.Add(Environment.MachineName);
-            TreeView_LoadRoots();
-            ListView_LoadRoots();
+            try
+            {
+                TreeView_LoadRoots();
+                ListView_LoadRoots();
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Debug.WriteLine(e);
+                return Task.Run(() => new ExecuteResult(false, e.Message));
+            }
             return Task.Run(() => new ExecuteResult(true, String.Empty));
         }
 

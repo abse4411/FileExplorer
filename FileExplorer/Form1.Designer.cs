@@ -44,7 +44,7 @@
             this.ForwardBtn = new System.Windows.Forms.Button();
             this.BackBtn = new System.Windows.Forms.Button();
             this.RefreshBtn = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.SearchBox = new System.Windows.Forms.ComboBox();
             this.PathTb = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -173,7 +173,7 @@
             this.tableLayoutPanel1.Controls.Add(this.ForwardBtn, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.BackBtn, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.RefreshBtn, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.comboBox1, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.SearchBox, 4, 0);
             this.tableLayoutPanel1.Controls.Add(this.PathTb, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 92);
@@ -225,15 +225,17 @@
             this.RefreshBtn.UseVisualStyleBackColor = true;
             this.RefreshBtn.Click += new System.EventHandler(this.RefreshBtn_Click);
             // 
-            // comboBox1
+            // SearchBox
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(981, 4);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(223, 23);
-            this.comboBox1.TabIndex = 12;
+            this.SearchBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.SearchBox.FormattingEnabled = true;
+            this.SearchBox.Location = new System.Drawing.Point(981, 4);
+            this.SearchBox.Margin = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.SearchBox.Name = "SearchBox";
+            this.SearchBox.Size = new System.Drawing.Size(223, 23);
+            this.SearchBox.TabIndex = 12;
+            this.SearchBox.SelectionChangeCommitted += new System.EventHandler(this.SearchBox_SelectionChangeCommitted);
+            this.SearchBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SearchBox_KeyUp);
             // 
             // PathTb
             // 
@@ -286,7 +288,7 @@
         private System.Windows.Forms.Button ForwardBtn;
         private System.Windows.Forms.Button BackBtn;
         private System.Windows.Forms.TextBox PathTb;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox SearchBox;
         private System.Windows.Forms.Button RefreshBtn;
     }
 }

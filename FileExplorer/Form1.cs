@@ -50,7 +50,7 @@ namespace FileExplorer
             ListView_LoadRoots();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void LoadBtn_Click(object sender, EventArgs e)
         {
             //if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
             //    return;
@@ -84,7 +84,7 @@ namespace FileExplorer
             Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
         }
 
-        #region Hidden
+        #region ChangeView
 
         private void DetailBtn_Click(object sender, EventArgs e)
         {
@@ -291,7 +291,7 @@ namespace FileExplorer
             }
         }
 
-        private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
+        private void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
             //var targetNode = e.Node;
             //if (targetNode != null)
@@ -334,6 +334,7 @@ namespace FileExplorer
             Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree, e.Node));
         }
 
+        #region Sort
         private class ListViewItemComparer : IComparer
         {
             private int col;
@@ -341,26 +342,10 @@ namespace FileExplorer
             public int Compare(object x, object y)
             {
                 int returnVal = -1;
-                returnVal = String.Compare(((ListViewItem) x).SubItems[col].Text,
-                    ((ListViewItem) y).SubItems[col].Text);
+                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
+                    ((ListViewItem)y).SubItems[col].Text);
                 return returnVal;
             }
-        }
-
-        private void FileList_ColumnClick(object sender, ColumnClickEventArgs e)
-        {
-            if (e.Column == lvwColumnSorter.SortColumn)
-            {
-                // Reverse the current sort direction for this column.
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
-            }
-            else
-            {
-                // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
-            }
-            this.FileList.Sort();
         }
 
         public class ListViewColumnSorter : IComparer
@@ -429,5 +414,23 @@ namespace FileExplorer
             /// </summary>
             public SortOrder Order { set; get; }
         }
+
+        private void FileList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwColumnSorter.SortColumn)
+            {
+                // Reverse the current sort direction for this column.
+                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            }
+            else
+            {
+                // Set the column number that is to be sorted; default to ascending.
+                lvwColumnSorter.SortColumn = e.Column;
+                lvwColumnSorter.Order = SortOrder.Ascending;
+            }
+            this.FileList.Sort();
+        }
+        #endregion
+
     }
 }

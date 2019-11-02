@@ -30,41 +30,28 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.PathTb = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.SmallIconList = new System.Windows.Forms.ImageList(this.components);
             this.LargeIconList = new System.Windows.Forms.ImageList(this.components);
             this.DetailBtn = new System.Windows.Forms.Button();
             this.SmallBtn = new System.Windows.Forms.Button();
             this.LargeBtn = new System.Windows.Forms.Button();
             this.ListBtn = new System.Windows.Forms.Button();
-            this.FileList = new System.Windows.Forms.ListView();
-            this.FileTree = new System.Windows.Forms.TreeView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.BackBtn = new System.Windows.Forms.Button();
+            this.FileTree = new System.Windows.Forms.TreeView();
+            this.FileList = new System.Windows.Forms.ListView();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ForwardBtn = new System.Windows.Forms.Button();
+            this.BackBtn = new System.Windows.Forms.Button();
+            this.LoadBtn = new System.Windows.Forms.Button();
+            this.PathTb = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // PathTb
-            // 
-            this.PathTb.Location = new System.Drawing.Point(216, 34);
-            this.PathTb.Name = "PathTb";
-            this.PathTb.Size = new System.Drawing.Size(509, 25);
-            this.PathTb.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(741, 34);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 25);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "LoadBtn";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // SmallIconList
             // 
@@ -85,7 +72,7 @@
             // 
             // DetailBtn
             // 
-            this.DetailBtn.Location = new System.Drawing.Point(720, 69);
+            this.DetailBtn.Location = new System.Drawing.Point(715, 4);
             this.DetailBtn.Name = "DetailBtn";
             this.DetailBtn.Size = new System.Drawing.Size(66, 24);
             this.DetailBtn.TabIndex = 3;
@@ -95,7 +82,7 @@
             // 
             // SmallBtn
             // 
-            this.SmallBtn.Location = new System.Drawing.Point(792, 69);
+            this.SmallBtn.Location = new System.Drawing.Point(792, 4);
             this.SmallBtn.Name = "SmallBtn";
             this.SmallBtn.Size = new System.Drawing.Size(66, 24);
             this.SmallBtn.TabIndex = 4;
@@ -105,7 +92,7 @@
             // 
             // LargeBtn
             // 
-            this.LargeBtn.Location = new System.Drawing.Point(864, 69);
+            this.LargeBtn.Location = new System.Drawing.Point(864, 4);
             this.LargeBtn.Name = "LargeBtn";
             this.LargeBtn.Size = new System.Drawing.Size(66, 24);
             this.LargeBtn.TabIndex = 5;
@@ -115,7 +102,7 @@
             // 
             // ListBtn
             // 
-            this.ListBtn.Location = new System.Drawing.Point(936, 69);
+            this.ListBtn.Location = new System.Drawing.Point(936, 4);
             this.ListBtn.Name = "ListBtn";
             this.ListBtn.Size = new System.Drawing.Size(66, 24);
             this.ListBtn.TabIndex = 6;
@@ -123,38 +110,18 @@
             this.ListBtn.UseVisualStyleBackColor = true;
             this.ListBtn.Click += new System.EventHandler(this.ListBtn_Click);
             // 
-            // FileList
+            // statusStrip1
             // 
-            this.FileList.AllowColumnReorder = true;
-            this.FileList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileList.FullRowSelect = true;
-            this.FileList.HideSelection = false;
-            this.FileList.Location = new System.Drawing.Point(0, 0);
-            this.FileList.Name = "FileList";
-            this.FileList.ShowItemToolTips = true;
-            this.FileList.Size = new System.Drawing.Size(815, 509);
-            this.FileList.TabIndex = 0;
-            this.FileList.UseCompatibleStateImageBehavior = false;
-            this.FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.FileList_ColumnClick);
-            this.FileList.DoubleClick += new System.EventHandler(this.FileList_DoubleClick);
-            // 
-            // FileTree
-            // 
-            this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileTree.Location = new System.Drawing.Point(0, 0);
-            this.FileTree.Name = "FileTree";
-            this.FileTree.ShowNodeToolTips = true;
-            this.FileTree.Size = new System.Drawing.Size(200, 509);
-            this.FileTree.TabIndex = 7;
-            this.FileTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterExpand);
-            this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterSelect);
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 623);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1204, 22);
+            this.statusStrip1.TabIndex = 7;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 99);
+            this.splitContainer1.Location = new System.Drawing.Point(3, 117);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -164,69 +131,150 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.FileList);
-            this.splitContainer1.Size = new System.Drawing.Size(1019, 509);
+            this.splitContainer1.Size = new System.Drawing.Size(1203, 501);
             this.splitContainer1.SplitterDistance = 200;
             this.splitContainer1.TabIndex = 8;
             // 
-            // BackBtn
+            // FileTree
             // 
-            this.BackBtn.Location = new System.Drawing.Point(12, 34);
-            this.BackBtn.Name = "BackBtn";
-            this.BackBtn.Size = new System.Drawing.Size(96, 25);
-            this.BackBtn.TabIndex = 9;
-            this.BackBtn.Text = "BackBtn";
-            this.BackBtn.UseVisualStyleBackColor = true;
-            this.BackBtn.Click += new System.EventHandler(this.BackBtn_Click);
+            this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileTree.Location = new System.Drawing.Point(0, 0);
+            this.FileTree.Name = "FileTree";
+            this.FileTree.Size = new System.Drawing.Size(200, 501);
+            this.FileTree.TabIndex = 0;
+            this.FileTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterExpand);
+            this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterSelect);
+            // 
+            // FileList
+            // 
+            this.FileList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileList.HideSelection = false;
+            this.FileList.Location = new System.Drawing.Point(0, 0);
+            this.FileList.Name = "FileList";
+            this.FileList.Size = new System.Drawing.Size(999, 501);
+            this.FileList.TabIndex = 0;
+            this.FileList.UseCompatibleStateImageBehavior = false;
+            this.FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.FileList_ColumnClick);
+            this.FileList.DoubleClick += new System.EventHandler(this.FileList_DoubleClick);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 5;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.Controls.Add(this.ForwardBtn, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.BackBtn, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.LoadBtn, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.PathTb, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.comboBox1, 4, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(5, 82);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1201, 29);
+            this.tableLayoutPanel1.TabIndex = 9;
             // 
             // ForwardBtn
             // 
-            this.ForwardBtn.Location = new System.Drawing.Point(114, 34);
+            this.ForwardBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.ForwardBtn.Location = new System.Drawing.Point(30, 2);
+            this.ForwardBtn.Margin = new System.Windows.Forms.Padding(0);
             this.ForwardBtn.Name = "ForwardBtn";
-            this.ForwardBtn.Size = new System.Drawing.Size(98, 25);
+            this.ForwardBtn.Size = new System.Drawing.Size(30, 24);
             this.ForwardBtn.TabIndex = 10;
             this.ForwardBtn.Text = "ForwardBtn";
             this.ForwardBtn.UseVisualStyleBackColor = true;
             this.ForwardBtn.Click += new System.EventHandler(this.ForwardBtn_Click);
             // 
+            // BackBtn
+            // 
+            this.BackBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.BackBtn.AutoSize = true;
+            this.BackBtn.Location = new System.Drawing.Point(0, 0);
+            this.BackBtn.Margin = new System.Windows.Forms.Padding(0);
+            this.BackBtn.Name = "BackBtn";
+            this.BackBtn.Size = new System.Drawing.Size(30, 29);
+            this.BackBtn.TabIndex = 0;
+            this.BackBtn.Text = "BackBtn";
+            this.BackBtn.UseVisualStyleBackColor = true;
+            this.BackBtn.Click += new System.EventHandler(this.BackBtn_Click);
+            // 
+            // LoadBtn
+            // 
+            this.LoadBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.LoadBtn.Location = new System.Drawing.Point(948, 2);
+            this.LoadBtn.Margin = new System.Windows.Forms.Padding(0);
+            this.LoadBtn.Name = "LoadBtn";
+            this.LoadBtn.Size = new System.Drawing.Size(30, 24);
+            this.LoadBtn.TabIndex = 10;
+            this.LoadBtn.Text = "LoadBtn";
+            this.LoadBtn.UseVisualStyleBackColor = true;
+            this.LoadBtn.Click += new System.EventHandler(this.LoadBtn_Click);
+            // 
+            // PathTb
+            // 
+            this.PathTb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.PathTb.Location = new System.Drawing.Point(60, 2);
+            this.PathTb.Margin = new System.Windows.Forms.Padding(0);
+            this.PathTb.Name = "PathTb";
+            this.PathTb.Size = new System.Drawing.Size(888, 25);
+            this.PathTb.TabIndex = 11;
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(978, 3);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(223, 23);
+            this.comboBox1.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1043, 620);
-            this.Controls.Add(this.ForwardBtn);
-            this.Controls.Add(this.BackBtn);
+            this.ClientSize = new System.Drawing.Size(1204, 645);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.ListBtn);
             this.Controls.Add(this.LargeBtn);
             this.Controls.Add(this.SmallBtn);
             this.Controls.Add(this.DetailBtn);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.PathTb);
             this.Name = "Form1";
             this.Text = "Form1";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.TextBox PathTb;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ImageList SmallIconList;
         private System.Windows.Forms.ImageList LargeIconList;
         private System.Windows.Forms.Button DetailBtn;
         private System.Windows.Forms.Button SmallBtn;
         private System.Windows.Forms.Button LargeBtn;
         private System.Windows.Forms.Button ListBtn;
-        private System.Windows.Forms.ListView FileList;
-        private System.Windows.Forms.TreeView FileTree;
+        private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button BackBtn;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TreeView FileTree;
+        private System.Windows.Forms.ListView FileList;
         private System.Windows.Forms.Button ForwardBtn;
+        private System.Windows.Forms.Button BackBtn;
+        private System.Windows.Forms.Button LoadBtn;
+        private System.Windows.Forms.TextBox PathTb;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

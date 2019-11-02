@@ -19,7 +19,7 @@ namespace FileExplorer.Core.Commands
             if (command.CanDo)
                 result =await command.ExecuteAsync();
             else
-                result=new ExecuteResult(false, "Can execute this command");
+                result=new ExecuteResult(false, $"Can execute this command {command}");
             if (!command.CanUndo)
                 commands.Pop();
 

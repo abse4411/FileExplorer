@@ -9,28 +9,28 @@ using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
 using FileExplorer.Factories;
 using FileExplorer.Infrastructure.Services;
+using FileExplorer.Services;
 
 namespace FileExplorer
 {
     public partial class Form1 : Form
     {
-        public IFileService Service { get; }
+        public IDialogService DialogService;
+        public IFileService FileService { get; }
         public PathHistoryCache Cache { get; }
         public CommandManager Invoker { get; }
-        //public List<string> PathHistory { get; private set; }
-        //public int HistoryMark { get; private set; }
-        private ListViewColumnSorter lvwColumnSorter;
+        private readonly ListViewColumnSorter _lvwColumnSorter;
         //private int Count = 0;
+
         public Form1()
         {
             InitializeComponent();
-            Service = new FileService();
+            DialogService=new DialogService();
+            FileService = new FileService();
             Cache = new PathHistoryCache();
-            Invoker = new CommandManager();
-            //PathHistory = new List<string>(20);
-            //HistoryMark = -1;
-            lvwColumnSorter = new ListViewColumnSorter();
-            this.FileList.ListViewItemSorter = lvwColumnSorter;
+            Invoker=new CommandManager();
+            _lvwColumnSorter = new ListViewColumnSorter();
+            this.FileList.ListViewItemSorter = _lvwColumnSorter;
             PrepareData();
         }
 
@@ -39,50 +39,8 @@ namespace FileExplorer
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
-            var result=await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, Service));
-            //HistoryMark++;
-            //PathHistory.Add(Environment.MachineName);
-
-            //Cache.HistoryMark++;
-            //Cache.PathHistory.Add(Environment.MachineName);
-
-            //TreeView_LoadRoots();
-            //ListView_LoadRoots();
+            await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
         }
-
-        //private void LoadBtn_Click(object sender, EventArgs e)
-        //{
-        //    //if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
-        //    //    return;
-        //    //HistoryMark++;
-        //    //if (HistoryMark <= PathHistory.Count - 1)
-        //    //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-        //    //PathHistory.Add(this.PathTb.Text);
-        //    //if (this.PathTb.Text == Environment.MachineName)
-        //    //{
-        //    //    ListView_LoadRoots();
-        //    //}
-        //    //else
-        //    //{
-        //    //    ListView_LoadItems(this.PathTb.Text);
-        //    //}
-
-        //    //if (Cache.HistoryMark > -1 && Cache.PathHistory[Cache.HistoryMark].Equals(this.PathTb.Text))
-        //    //    return;
-        //    //Cache.HistoryMark++;
-        //    //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
-        //    //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
-        //    //Cache.PathHistory.Add(this.PathTb.Text);
-        //    //if (this.PathTb.Text == Environment.MachineName)
-        //    //{
-        //    //    ListView_LoadRoots();
-        //    //}
-        //    //else
-        //    //{
-        //    //    ListView_LoadItems(this.PathTb.Text);
-        //    //}
-        //    Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
-        //}
 
         #region ChangeView
 
@@ -115,76 +73,7 @@ namespace FileExplorer
 
         #endregion
 
-
-        private async void TreeView_LoadRoots()
-        {
-            this.FileTree.Nodes.Clear();
-            this.FileTree.BeginUpdate();
-            var rootNode = new TreeNode(Environment.MachineName, 3, 3)
-            {
-                Tag = FactoryConstants.PC,
-                ToolTipText = Environment.MachineName,
-                Name = Environment.MachineName
-            };
-            var nodes = await TreeNodeFactory.GetRootNodesAsync();
-            foreach (var node in nodes)
-            {
-                rootNode.Nodes.Add(node);
-            }
-
-            this.FileTree.Nodes.Add(rootNode);
-            this.FileTree.EndUpdate();
-        }
-
-        //private void TreeView_LoadItems()
-        //{
-
-        //}
-
-        private void ListView_LoadRoots()
-        {
-            this.PathTb.Text = Environment.MachineName;
-            this.FileList.Clear();
-            this.FileList.BeginUpdate();
-            var headers = ListViewItemFactory.GetDriverHeaderItems();
-            foreach (var header in headers)
-            {
-                this.FileList.Columns.Add(header);
-            }
-
-            var items = ListViewItemFactory.GetRootDetailIItems();
-            foreach (var item in items)
-            {
-                this.FileList.Items.Add(item);
-            }
-
-            this.FileList.EndUpdate();
-            this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        }
-        //private async void ListView_LoadItems(string path)
-        //{
-        //    if (!Directory.Exists(path))
-        //        return;
-
-        //    this.PathTb.Text = path;
-        //    this.FileList.Clear();
-        //    this.FileList.BeginUpdate();
-        //    var headers = ListViewItemFactory.GetFIleHeaderItems();
-        //    foreach (var header in headers)
-        //    {
-        //        this.FileList.Columns.Add(header);
-        //    }
-        //    var list = await Service.GetFileItemsAsync(path);
-        //    var items = await ListViewItemFactory.GetDetailItemsAsync(list);
-        //    foreach (var item in items)
-        //    {
-        //        this.FileList.Items.Add(item);
-        //    }
-        //    this.FileList.EndUpdate();
-        //    this.FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-        //}
-
-        private void FileList_DoubleClick(object sender, EventArgs e)
+        private async void FileList_DoubleClick(object sender, EventArgs e)
         {
             if (this.FileList.SelectedItems.Count == 1)
             {
@@ -195,19 +84,10 @@ namespace FileExplorer
                     {
                         case FactoryConstants.Folder:
                         case FactoryConstants.Driver:
-                            //HistoryMark++;
-                            //if (HistoryMark <= PathHistory.Count - 1)
-                            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-                            //PathHistory.Add(selectedItem.Name);
-                            //ListView_LoadItems(selectedItem.Name);
-
-                            //Cache.HistoryMark++;
-                            //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
-                            //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
-                            //Cache.PathHistory.Add(selectedItem.Name);
-                            //ListView_LoadItems(selectedItem.Name);
                             PathTb.Text = selectedItem.Name;
-                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
+                            var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+                            if (!result.IsSuccessful)
+                                DialogService.ShowErrorDialog("Error", result.Message);
                             break;
                         case FactoryConstants.File:
                             Process.Start(selectedItem.Name);
@@ -219,47 +99,21 @@ namespace FileExplorer
             }
         }
 
-        private void BackBtn_Click(object sender, EventArgs e)
+        private async void BackBtn_Click(object sender, EventArgs e)
         {
-            //if (HistoryMark <= 0)
-            //{
-            //    ListView_LoadRoots();
-            //    this.PathTb.Text = Environment.MachineName;
-            //    return;
-            //}
-            //HistoryMark--;
-            //var path = PathHistory[HistoryMark];
-            //this.PathTb.Text = path;
-            //if (this.PathTb.Text == Environment.MachineName)
-            //{
-            //    ListView_LoadRoots();
-            //}
-            //else
-            //{
-            //    ListView_LoadItems(path);
-            //}
-            Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, Service));
+            var result=await Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, FileService));
+            if (!result.IsSuccessful)
+                DialogService.ShowErrorDialog("Error", result.Message);
         }
 
-        private void ForwardBtn_Click(object sender, EventArgs e)
+        private async void ForwardBtn_Click(object sender, EventArgs e)
         {
-            //if (HistoryMark >-1 && HistoryMark >= PathHistory.Count - 1)
-            //    return;
-            //HistoryMark++;
-            //var path = PathHistory[HistoryMark];
-            //this.PathTb.Text = path;
-            //if (this.PathTb.Text == Environment.MachineName)
-            //{
-            //    ListView_LoadRoots();
-            //}
-            //else
-            //{
-            //    ListView_LoadItems(path);
-            //}
-            Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, Service));
+            var result = await Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, FileService));
+            if (!result.IsSuccessful)
+                DialogService.ShowErrorDialog("Error", result.Message);
         }
 
-        private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private async void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //Count++;
             //Debug.WriteLine($"========={Count}");
@@ -273,16 +127,10 @@ namespace FileExplorer
                         case FactoryConstants.Driver:
                         case FactoryConstants.Folder:
                         case FactoryConstants.PC:
-                            //HistoryMark++;
-                            //if (HistoryMark <= PathHistory.Count - 1)
-                            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-                            //PathHistory.Add(selectedNode.Name);
-                            //if(type.Equals(FactoryConstants.PC))
-                            //    ListView_LoadRoots();
-                            //else
-                            //    ListView_LoadItems(selectedNode.Name);
                             PathTb.Text = selectedNode.Name;
-                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
+                            var result = await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+                            if (!result.IsSuccessful)
+                                DialogService.ShowErrorDialog("Error", result.Message);
                             break;
                         default:
                             return;
@@ -290,50 +138,16 @@ namespace FileExplorer
                 }
             }
 
-            this.FileTree.SelectedNode = null;
+            //this.FileTree.SelectedNode = null;
         }
 
-        private void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
+        private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
-            //var targetNode = e.Node;
-            //if (targetNode != null)
-            //{
-            //    if (targetNode.Tag is string type)
-            //    {
-            //        switch (type)
-            //        {
-            //            case FactoryConstants.Driver:
-            //            case FactoryConstants.Folder:
-            //            case FactoryConstants.PC:
-            //                this.FileTree.BeginUpdate();
-            //                targetNode.Nodes.Clear();
-            //                IList<TreeNode> newNodes;
-            //                if (type == FactoryConstants.PC)
-            //                    newNodes = await TreeNodeFactory.GetRootNodesAsync();
-            //                else
-            //                    newNodes = await TreeNodeFactory.GetNodesAsync(targetNode.Name);
-            //                foreach (var n in newNodes)
-            //                    targetNode.Nodes.Add(n);
-            //                foreach (TreeNode node in targetNode.Nodes)
-            //                {
-            //                    if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
-            //                    {
-            //                        node.Nodes.Clear();
-            //                        var nodes = await TreeNodeFactory.GetNodesAsync(node.Name);
-            //                        foreach (var n in nodes)
-            //                        {
-            //                            node.Nodes.Add(n);
-            //                        }
-            //                    }
-            //                }
-            //                this.FileTree.EndUpdate();
-            //                break;
-            //            default:
-            //                return;
-            //        }
-            //    }
-            //}
-            Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree, e.Node));
+            if(e.Node==null)
+                return;
+            var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(this.FileTree, e.Node));
+            if (!result.IsSuccessful)
+                DialogService.ShowErrorDialog("Error", result.Message);
         }
 
         #region Sort
@@ -406,33 +220,37 @@ namespace FileExplorer
 
         private void FileList_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            if (e.Column == lvwColumnSorter.SortColumn)
+            if (e.Column == _lvwColumnSorter.SortColumn)
             {
                 // Reverse the current sort direction for this column.
-                lvwColumnSorter.Order = lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             }
             else
             {
                 // Set the column number that is to be sorted; default to ascending.
-                lvwColumnSorter.SortColumn = e.Column;
-                lvwColumnSorter.Order = SortOrder.Ascending;
+                _lvwColumnSorter.SortColumn = e.Column;
+                _lvwColumnSorter.Order = SortOrder.Ascending;
             }
             this.FileList.Sort();
         }
         #endregion
 
-        private void PathTb_KeyUp(object sender, KeyEventArgs e)
+        private async void PathTb_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
+                var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+                if (!result.IsSuccessful)
+                    DialogService.ShowErrorDialog("Error", result.Message);
                 e.Handled = true;
             }
         }
 
-        private void RefreshBtn_Click(object sender, EventArgs e)
+        private async void RefreshBtn_Click(object sender, EventArgs e)
         {
-            Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, Service));
+            var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
+            if (!result.IsSuccessful)
+                DialogService.ShowErrorDialog("Error", result.Message);
         }
     }
 }

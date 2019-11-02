@@ -62,8 +62,10 @@ namespace FileExplorer.Commands
             {
                 ListView.Columns.Add(header);
             }
+            ListView.EndUpdate();
             var list = await Service.GetFileItemsAsync(path);
             var items = await ListViewItemFactory.GetDetailItemsAsync(list);
+            ListView.BeginUpdate();
             foreach (var item in items)
             {
                 ListView.Items.Add(item);

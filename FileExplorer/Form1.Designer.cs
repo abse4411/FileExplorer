@@ -43,9 +43,9 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ForwardBtn = new System.Windows.Forms.Button();
             this.BackBtn = new System.Windows.Forms.Button();
-            this.PathTb = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.RefreshBtn = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.PathTb = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -136,15 +136,16 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.FileList);
             this.splitContainer1.Size = new System.Drawing.Size(1204, 501);
-            this.splitContainer1.SplitterDistance = 200;
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 8;
             // 
             // FileTree
             // 
             this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileTree.HideSelection = false;
             this.FileTree.Location = new System.Drawing.Point(0, 0);
             this.FileTree.Name = "FileTree";
-            this.FileTree.Size = new System.Drawing.Size(200, 501);
+            this.FileTree.Size = new System.Drawing.Size(300, 501);
             this.FileTree.TabIndex = 0;
             this.FileTree.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterExpand);
             this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.FileTree_AfterSelect);
@@ -155,7 +156,7 @@
             this.FileList.HideSelection = false;
             this.FileList.Location = new System.Drawing.Point(0, 0);
             this.FileList.Name = "FileList";
-            this.FileList.Size = new System.Drawing.Size(1000, 501);
+            this.FileList.Size = new System.Drawing.Size(900, 501);
             this.FileList.TabIndex = 0;
             this.FileList.UseCompatibleStateImageBehavior = false;
             this.FileList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.FileList_ColumnClick);
@@ -210,27 +211,6 @@
             this.BackBtn.UseVisualStyleBackColor = true;
             this.BackBtn.Click += new System.EventHandler(this.BackBtn_Click);
             // 
-            // PathTb
-            // 
-            this.PathTb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.PathTb.Location = new System.Drawing.Point(60, 3);
-            this.PathTb.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
-            this.PathTb.Name = "PathTb";
-            this.PathTb.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.PathTb.Size = new System.Drawing.Size(891, 25);
-            this.PathTb.TabIndex = 11;
-            this.PathTb.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PathTb_KeyUp);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(981, 4);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(223, 23);
-            this.comboBox1.TabIndex = 12;
-            // 
             // RefreshBtn
             // 
             this.RefreshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -244,6 +224,27 @@
             this.RefreshBtn.TabIndex = 13;
             this.RefreshBtn.UseVisualStyleBackColor = true;
             this.RefreshBtn.Click += new System.EventHandler(this.RefreshBtn_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(981, 4);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(223, 23);
+            this.comboBox1.TabIndex = 12;
+            // 
+            // PathTb
+            // 
+            this.PathTb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.PathTb.Location = new System.Drawing.Point(60, 3);
+            this.PathTb.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0);
+            this.PathTb.Name = "PathTb";
+            this.PathTb.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.PathTb.Size = new System.Drawing.Size(891, 25);
+            this.PathTb.TabIndex = 11;
+            this.PathTb.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PathTb_KeyUp);
             // 
             // Form1
             // 

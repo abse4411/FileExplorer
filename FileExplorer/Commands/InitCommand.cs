@@ -41,12 +41,13 @@ namespace FileExplorer.Commands
                 ToolTipText = Environment.MachineName,
                 Name = Environment.MachineName
             };
+            FileTree.EndUpdate();
             var nodes = await TreeNodeFactory.GetRootNodesAsync();
+            FileTree.BeginUpdate();
             foreach (var node in nodes)
             {
                 rootNode.Nodes.Add(node);
             }
-
             FileTree.Nodes.Add(rootNode);
             FileTree.EndUpdate();
         }

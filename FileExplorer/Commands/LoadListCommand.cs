@@ -32,14 +32,6 @@ namespace FileExplorer.Commands
             return new ExecuteResult(true, String.Empty);
         }
 
-        public override bool CanDo
-        {
-            get
-            {
-                if (Cache.HistoryMark > -1 && Cache.PathHistory[Cache.HistoryMark] == Path)
-                    return false;
-                return true;
-            }
-        }
+        public override bool CanDo => true;
     }
 }

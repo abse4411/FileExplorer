@@ -38,8 +38,10 @@ namespace FileExplorer.Commands
                     {
                         if (!Directory.Exists(TargetNode.Name))
                         {
+                            TreeView.BeginUpdate();
                             var fatherNode = TargetNode.Parent;
                             fatherNode.Nodes.Remove(TargetNode);
+                            TreeView.EndUpdate();
                             return new ExecuteResult(false, $"Directory \"{TargetNode.Name}\" does not exist");
                         }
                         try
@@ -52,13 +54,9 @@ namespace FileExplorer.Commands
                             return new ExecuteResult(false, e.Message);
                         }
                     }
-                    TreeView.BeginUpdate();
-                    TargetNode.Nodes.Clear();
-                    foreach (var n in newNodes)
-                        TargetNode.Nodes.Add(n);
-                    TreeView.EndUpdate();
+
                     List<KeyValuePair<TreeNode, IList<TreeNode>>> nodesList=new List<KeyValuePair<TreeNode, IList<TreeNode>>>();
-                    foreach (TreeNode node in TargetNode.Nodes)
+                    foreach (TreeNode node in newNodes)
                     {
                         if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
                         {
@@ -82,6 +80,7 @@ namespace FileExplorer.Commands
                         }
                     }
                     TreeView.BeginUpdate();
+                    TargetNode.Nodes.Clear();
                     foreach (var pair in nodesList)
                     {
                         var node = pair.Key;
@@ -90,6 +89,8 @@ namespace FileExplorer.Commands
                             node.Nodes.Add(n);
                         }
                     }
+                    foreach (var n in newNodes)
+                        TargetNode.Nodes.Add(n);
                     TreeView.EndUpdate();
                     break;
                 default:

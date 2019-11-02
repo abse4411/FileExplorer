@@ -38,6 +38,7 @@ namespace FileExplorer
             FileList.SmallImageList = SmallIconList;
             FileList.LargeImageList = LargeIconList;
             await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
+            UpdateCountLabel();
         }
 
         #region ChangeView
@@ -82,6 +83,7 @@ namespace FileExplorer
                             var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
                             if (!result.IsSuccessful)
                                 DialogService.ShowErrorDialog("Error", result.Message);
+                            UpdateCountLabel();
                             break;
                         case FactoryConstants.File:
                             Process.Start(selectedItem.Name);
@@ -98,6 +100,7 @@ namespace FileExplorer
             var result=await Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, FileService));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
+            UpdateCountLabel();
         }
 
         private async void ForwardBtn_Click(object sender, EventArgs e)
@@ -105,6 +108,7 @@ namespace FileExplorer
             var result = await Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, FileService));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
+            UpdateCountLabel();
         }
 
         private async void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -125,6 +129,7 @@ namespace FileExplorer
                             var result = await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
                             if (!result.IsSuccessful)
                                 DialogService.ShowErrorDialog("Error", result.Message);
+                            UpdateCountLabel();
                             break;
                         default:
                             return;
@@ -236,6 +241,7 @@ namespace FileExplorer
                 var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
                 if (!result.IsSuccessful)
                     DialogService.ShowErrorDialog("Error", result.Message);
+                UpdateCountLabel();
                 e.Handled = true;
             }
         }
@@ -245,6 +251,7 @@ namespace FileExplorer
             var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
+            UpdateCountLabel();
         }
 
         private async void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
@@ -257,6 +264,7 @@ namespace FileExplorer
             var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
+            UpdateCountLabel();
         }
 
         private async void SearchBox_KeyUp(object sender, KeyEventArgs e)
@@ -269,6 +277,7 @@ namespace FileExplorer
                 var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text,FileService));
                 if (!result.IsSuccessful)
                     DialogService.ShowErrorDialog("Error", result.Message);
+                UpdateCountLabel();
                 e.Handled = true;
             }
         }
@@ -286,6 +295,23 @@ namespace FileExplorer
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             RefreshBtn_Click(null, null);
+        }
+
+        private void FileList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            var count = FileList.SelectedItems?.Count ?? 0;
+            SelectLabel.Text = count > 0 ? $"{count} item(s) selected       " : string.Empty;
+        }
+
+        private void UpdateCountLabel()
+        {
+            CountLabel.Text= $"{FileList.Items.Count} item(s)        |";
+            FileList_ItemSelectionChanged(null, null);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

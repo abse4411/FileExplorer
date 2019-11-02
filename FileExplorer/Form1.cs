@@ -41,34 +41,30 @@ namespace FileExplorer
         }
 
         #region ChangeView
-
-        private void DetailBtn_Click(object sender, EventArgs e)
+        private void detailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileList.View = View.Details;
             //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
-        private void SmallBtn_Click(object sender, EventArgs e)
+        private void samllIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileList.View = View.SmallIcon;
             //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
         }
 
-        private void LargeBtn_Click(object sender, EventArgs e)
+        private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileList.View = View.LargeIcon;
             //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-
         }
 
-        private void ListBtn_Click(object sender, EventArgs e)
+        private void listToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileList.View = View.List;
             //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
-
         #endregion
 
         private async void FileList_DoubleClick(object sender, EventArgs e)
@@ -275,6 +271,21 @@ namespace FileExplorer
                     DialogService.ShowErrorDialog("Error", result.Message);
                 e.Handled = true;
             }
+        }
+
+        private void backToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BackBtn_Click(null, null);
+        }
+
+        private void forwardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ForwardBtn_Click(null, null);
+        }
+
+        private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RefreshBtn_Click(null, null);
         }
     }
 }

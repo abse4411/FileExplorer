@@ -50,39 +50,39 @@ namespace FileExplorer
             ListView_LoadRoots();
         }
 
-        private void LoadBtn_Click(object sender, EventArgs e)
-        {
-            //if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
-            //    return;
-            //HistoryMark++;
-            //if (HistoryMark <= PathHistory.Count - 1)
-            //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
-            //PathHistory.Add(this.PathTb.Text);
-            //if (this.PathTb.Text == Environment.MachineName)
-            //{
-            //    ListView_LoadRoots();
-            //}
-            //else
-            //{
-            //    ListView_LoadItems(this.PathTb.Text);
-            //}
+        //private void LoadBtn_Click(object sender, EventArgs e)
+        //{
+        //    //if (HistoryMark > -1 && PathHistory[HistoryMark].Equals(this.PathTb.Text))
+        //    //    return;
+        //    //HistoryMark++;
+        //    //if (HistoryMark <= PathHistory.Count - 1)
+        //    //    PathHistory.RemoveRange(HistoryMark, PathHistory.Count - HistoryMark);
+        //    //PathHistory.Add(this.PathTb.Text);
+        //    //if (this.PathTb.Text == Environment.MachineName)
+        //    //{
+        //    //    ListView_LoadRoots();
+        //    //}
+        //    //else
+        //    //{
+        //    //    ListView_LoadItems(this.PathTb.Text);
+        //    //}
 
-            //if (Cache.HistoryMark > -1 && Cache.PathHistory[Cache.HistoryMark].Equals(this.PathTb.Text))
-            //    return;
-            //Cache.HistoryMark++;
-            //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
-            //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
-            //Cache.PathHistory.Add(this.PathTb.Text);
-            //if (this.PathTb.Text == Environment.MachineName)
-            //{
-            //    ListView_LoadRoots();
-            //}
-            //else
-            //{
-            //    ListView_LoadItems(this.PathTb.Text);
-            //}
-            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
-        }
+        //    //if (Cache.HistoryMark > -1 && Cache.PathHistory[Cache.HistoryMark].Equals(this.PathTb.Text))
+        //    //    return;
+        //    //Cache.HistoryMark++;
+        //    //if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
+        //    //    Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);
+        //    //Cache.PathHistory.Add(this.PathTb.Text);
+        //    //if (this.PathTb.Text == Environment.MachineName)
+        //    //{
+        //    //    ListView_LoadRoots();
+        //    //}
+        //    //else
+        //    //{
+        //    //    ListView_LoadItems(this.PathTb.Text);
+        //    //}
+        //    Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
+        //}
 
         #region ChangeView
 
@@ -432,5 +432,13 @@ namespace FileExplorer
         }
         #endregion
 
+        private void PathTb_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
+                e.Handled = true;
+            }
+        }
     }
 }

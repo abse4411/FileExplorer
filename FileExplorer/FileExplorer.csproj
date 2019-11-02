@@ -107,6 +107,8 @@
     <Content Include="Assets\folder_L.png" />
     <Content Include="Assets\folder_S.png" />
     <Content Include="Assets\hard-disk_S.png" />
+    <Content Include="Assets\left-arrow_S.png" />
+    <Content Include="Assets\refresh_S.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

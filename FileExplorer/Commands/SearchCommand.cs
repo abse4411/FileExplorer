@@ -34,8 +34,8 @@ namespace FileExplorer.Commands
             if (string.IsNullOrWhiteSpace(path) || 
                 string.IsNullOrWhiteSpace(Pattern) || !Directory.Exists(path))
                 return new ExecuteResult(false, "Invalid path or pattern");
-            ListView.BeginUpdate();
             ListView.Clear();
+            ListView.BeginUpdate();
             var headers = ListViewItemFactory.GetFIleHeaderItems();
             foreach (var header in headers)
             {

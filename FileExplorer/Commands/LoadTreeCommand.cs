@@ -31,8 +31,6 @@ namespace FileExplorer.Commands
                 case FactoryConstants.Driver:
                 case FactoryConstants.Folder:
                 case FactoryConstants.PC:
-
-                    TargetNode.Nodes.Clear();
                     IList<TreeNode> newNodes;
                     if (type == FactoryConstants.PC)
                         newNodes = await TreeNodeFactory.GetRootNodesAsync();
@@ -55,9 +53,11 @@ namespace FileExplorer.Commands
                         }
                     }
                     TreeView.BeginUpdate();
+                    TargetNode.Nodes.Clear();
                     foreach (var n in newNodes)
                         TargetNode.Nodes.Add(n);
                     TreeView.EndUpdate();
+                    List<KeyValuePair<TreeNode, IList<TreeNode>>> nodesList=new List<KeyValuePair<TreeNode, IList<TreeNode>>>();
                     foreach (TreeNode node in TargetNode.Nodes)
                     {
                         if (node.Tag is string nodeType && nodeType.Equals(FactoryConstants.Folder))
@@ -78,17 +78,24 @@ namespace FileExplorer.Commands
                                 Debug.WriteLine(e);
                                 continue;
                             }
-                            TreeView.BeginUpdate();
-                            foreach (var n in nodes)
-                                node.Nodes.Add(n);
-                            TreeView.EndUpdate();
+                            nodesList.Add(new KeyValuePair<TreeNode, IList<TreeNode>>(node,nodes));
                         }
                     }
+                    TreeView.BeginUpdate();
+                    foreach (var pair in nodesList)
+                    {
+                        var node = pair.Key;
+                        foreach (var n in pair.Value)
+                        {
+                            node.Nodes.Add(n);
+                        }
+                    }
+                    TreeView.EndUpdate();
                     break;
                 default:
                     return new ExecuteResult(false, $"Unknown tree node tag:{type}"); ;
             }
-            return new ExecuteResult(true,String.Empty);
+            return new ExecuteResult(true, String.Empty);
         }
 
         public override void Undo()

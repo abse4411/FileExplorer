@@ -21,7 +21,7 @@ namespace FileExplorer.Commands
             TreeView = treeView;
         }
 
-        public override async void Execute()
+        public override async Task<ExecuteResult> ExecuteAsync()
         {
             var type = TargetNode.Tag as string;
             switch (type)
@@ -51,8 +51,9 @@ namespace FileExplorer.Commands
                     TreeView.EndUpdate();
                     break;
                 default:
-                    return;
+                    return new ExecuteResult(false, $"Unknown tree node tag:{type}"); ;
             }
+            return new ExecuteResult(true,String.Empty);
         }
 
         public override void Undo()

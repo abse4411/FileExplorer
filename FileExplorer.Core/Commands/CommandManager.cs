@@ -10,13 +10,20 @@ namespace FileExplorer.Core.Commands
     {
         private readonly Stack<Command> commands = new Stack<Command>();
 
-        public void Execute(Command command)
+        public async Task<ExecuteResult> Execute(Command command)
         {
+            if(command==null)
+                throw new ArgumentNullException(nameof(command));
+            ExecuteResult result;
             commands.Push(command);
-            if(command.CanDo)
-                command.Execute();
+            if (command.CanDo)
+                result =await command.ExecuteAsync();
+            else
+                result=new ExecuteResult(false, "Can execute this command");
             if (!command.CanUndo)
                 commands.Pop();
+
+            return result;
         }
 
         public void Undo()

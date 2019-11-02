@@ -8,7 +8,7 @@ namespace FileExplorer.Core.Commands
 {
     public abstract class Command
     {
-        public abstract void Execute();
+        public abstract Task<ExecuteResult> ExecuteAsync();
 
         public abstract void Undo();
 

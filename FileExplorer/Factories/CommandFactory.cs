@@ -11,6 +11,11 @@ namespace FileExplorer.Factories
 {
     static class CommandFactory
     {
+        public static InitCommand GetInitCommand(PathHistoryCache cache, ListView listView,TreeView treeView, TextBox pathTbBox, IFileService service)
+        {
+            return new InitCommand(cache, listView, treeView,pathTbBox, service);
+        }
+
         public static BackCommand GetBackCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
         {
             return new BackCommand(cache,listView,pathTbBox,service);
@@ -21,9 +26,9 @@ namespace FileExplorer.Factories
             return new ForwardCommand(cache, listView, pathTbBox, service);
         }
 
-        public static LoadListCommand GetLoadCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
+        public static LoadListCommand GetLoadCommand(PathHistoryCache cache, ListView listView, string path, IFileService service)
         {
-            return new LoadListCommand(cache, listView, pathTbBox, service);
+            return new LoadListCommand(cache, listView, path, service);
         }
         
         public static LoadTreeCommand GetLoadTreeCommand(TreeView treeView, TreeNode targetNode)
@@ -31,9 +36,9 @@ namespace FileExplorer.Factories
             return new LoadTreeCommand(treeView, targetNode);
         }
 
-        public static RefreshCommand GetRefreshCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
+        public static RefreshCommand GetRefreshCommand(PathHistoryCache cache, ListView listView, string path, IFileService service)
         {
-            return new RefreshCommand(cache, listView, pathTbBox, service);
+            return new RefreshCommand(cache, listView, path, service);
         }
     }
 }

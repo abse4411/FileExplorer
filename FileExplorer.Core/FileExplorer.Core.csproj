@@ -43,9 +43,12 @@
   <ItemGroup>
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\ExecuteResult.cs" />
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\IFileService.cs" />
+    <Compile Include="Services\Result.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

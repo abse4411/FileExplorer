@@ -4,26 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
 
 namespace FileExplorer.Commands
 {
     public class BackCommand: NavigateCommand
     {
+        public TextBox PathTbBox { get; }
         public BackCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service) 
-            : base(cache, listView, pathTbBox, service)
+            : base(cache, listView, service)
         {
+            PathTbBox = pathTbBox;
         }
 
-        public override void Execute()
+        public override async Task<ExecuteResult> ExecuteAsync()
         {
             Cache.HistoryMark--;
             var path = Cache.PathHistory[Cache.HistoryMark];
-            PathTextBox.Text = path;
+            PathTbBox.Text = path;
             if (path == Environment.MachineName)
                 ListView_LoadRoots();
-            else
-                ListView_LoadItems(path);
+            else if (!await ListView_LoadItems(path))
+            {
+                return new ExecuteResult(false, "Directory \"{path}\" does not exist");
+            }
+            return new ExecuteResult(true,String.Empty);
         }
 
         public override bool CanDo

@@ -11,20 +11,28 @@ namespace FileExplorer.Commands
 {
     public class RefreshCommand: NavigateCommand
     {
-        public RefreshCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service) : base(cache, listView, pathTbBox, service)
+        public string Path { get; }
+
+        public RefreshCommand(PathHistoryCache cache, ListView listView, string path, IFileService service) : base(cache, listView, service)
         {
+            Path = path;
         }
-        public override void Execute()
+        public override async Task<ExecuteResult> ExecuteAsync()
         {
+            if (string.IsNullOrWhiteSpace(Path))
+                return new ExecuteResult(true, String.Empty);
             if (Cache.HistoryMark < 0)
             {
                 Cache.HistoryMark++;
-                Cache.PathHistory.Add(PathTextBox.Text);
+                Cache.PathHistory.Add(Path);
             }
-            if (PathTextBox.Text == Environment.MachineName)
+            if (Path == Environment.MachineName)
                 ListView_LoadRoots();
-            else
-                ListView_LoadItems(PathTextBox.Text);
+            else if (!await ListView_LoadItems(Path))
+            {
+                return new ExecuteResult(false, $"Directory \"{Path}\" does not exist");
+            }
+            return new ExecuteResult(true, String.Empty);
         }
 
         public override bool CanDo => true;

@@ -34,20 +34,20 @@ namespace FileExplorer
             PrepareData();
         }
 
-        private void PrepareData()
+        private async void PrepareData()
         {
             this.FileTree.ImageList = this.SmallIconList;
             this.FileList.SmallImageList = this.SmallIconList;
             this.FileList.LargeImageList = this.LargeIconList;
-
+            var result=await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, Service));
             //HistoryMark++;
             //PathHistory.Add(Environment.MachineName);
 
-            Cache.HistoryMark++;
-            Cache.PathHistory.Add(Environment.MachineName);
+            //Cache.HistoryMark++;
+            //Cache.PathHistory.Add(Environment.MachineName);
 
-            TreeView_LoadRoots();
-            ListView_LoadRoots();
+            //TreeView_LoadRoots();
+            //ListView_LoadRoots();
         }
 
         //private void LoadBtn_Click(object sender, EventArgs e)
@@ -207,7 +207,7 @@ namespace FileExplorer
                             //Cache.PathHistory.Add(selectedItem.Name);
                             //ListView_LoadItems(selectedItem.Name);
                             PathTb.Text = selectedItem.Name;
-                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
+                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
                             break;
                         case FactoryConstants.File:
                             Process.Start(selectedItem.Name);
@@ -282,7 +282,7 @@ namespace FileExplorer
                             //else
                             //    ListView_LoadItems(selectedNode.Name);
                             PathTb.Text = selectedNode.Name;
-                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
+                            Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
                             break;
                         default:
                             return;
@@ -337,19 +337,6 @@ namespace FileExplorer
         }
 
         #region Sort
-        private class ListViewItemComparer : IComparer
-        {
-            private int col;
-
-            public int Compare(object x, object y)
-            {
-                int returnVal = -1;
-                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
-                    ((ListViewItem)y).SubItems[col].Text);
-                return returnVal;
-            }
-        }
-
         public class ListViewColumnSorter : IComparer
         {
 
@@ -438,14 +425,14 @@ namespace FileExplorer
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
+                Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, Service));
                 e.Handled = true;
             }
         }
 
         private void RefreshBtn_Click(object sender, EventArgs e)
         {
-            Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb, Service));
+            Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, Service));
         }
     }
 }

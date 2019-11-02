@@ -15,18 +15,14 @@ namespace FileExplorer.Commands
     {
         protected PathHistoryCache Cache { get; }
         protected ListView ListView { get; }
-        protected TextBox PathTextBox { get; }
         protected IFileService Service { get; }
 
-        public NavigateCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
+        protected NavigateCommand(PathHistoryCache cache, ListView listView, IFileService service)
         {
             Cache = cache;
             ListView = listView;
-            PathTextBox = pathTbBox;
             Service = service;
         }
-
-        public override void Execute() { }
 
         public override void Undo()
         {
@@ -52,10 +48,13 @@ namespace FileExplorer.Commands
             ListView.EndUpdate();
             ListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
-        protected async void ListView_LoadItems(string path)
+        protected async Task<bool> ListView_LoadItems(string path)
         {
             if (!Directory.Exists(path))
-                return;
+            {
+                ListView.Clear();
+                return false;
+            }
             ListView.BeginUpdate();
             ListView.Clear();
             var headers = ListViewItemFactory.GetFIleHeaderItems();
@@ -71,6 +70,7 @@ namespace FileExplorer.Commands
             }
             ListView.EndUpdate();
             ListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            return true;
         }
     }
 }

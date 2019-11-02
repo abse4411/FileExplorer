@@ -243,6 +243,7 @@
             this.RefreshBtn.Size = new System.Drawing.Size(30, 30);
             this.RefreshBtn.TabIndex = 13;
             this.RefreshBtn.UseVisualStyleBackColor = true;
+            this.RefreshBtn.Click += new System.EventHandler(this.RefreshBtn_Click);
             // 
             // Form1
             // 

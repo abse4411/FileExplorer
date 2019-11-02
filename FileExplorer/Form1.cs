@@ -20,7 +20,7 @@ namespace FileExplorer
         //public List<string> PathHistory { get; private set; }
         //public int HistoryMark { get; private set; }
         private ListViewColumnSorter lvwColumnSorter;
-
+        //private int Count = 0;
         public Form1()
         {
             InitializeComponent();
@@ -261,6 +261,8 @@ namespace FileExplorer
 
         private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            //Count++;
+            //Debug.WriteLine($"========={Count}");
             var selectedNode = this.FileTree.SelectedNode;
             if (selectedNode != null)
             {
@@ -286,9 +288,9 @@ namespace FileExplorer
                             return;
                     }
                 }
-
-                this.FileTree.SelectedNode = null;
             }
+
+            this.FileTree.SelectedNode = null;
         }
 
         private void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
@@ -439,6 +441,11 @@ namespace FileExplorer
                 Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb, Service));
                 e.Handled = true;
             }
+        }
+
+        private void RefreshBtn_Click(object sender, EventArgs e)
+        {
+            Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb, Service));
         }
     }
 }

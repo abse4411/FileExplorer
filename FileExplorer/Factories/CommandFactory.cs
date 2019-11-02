@@ -30,5 +30,10 @@ namespace FileExplorer.Factories
         {
             return new LoadTreeCommand(treeView, targetNode);
         }
+
+        public static RefreshCommand GetRefreshCommand(PathHistoryCache cache, ListView listView, TextBox pathTbBox, IFileService service)
+        {
+            return new RefreshCommand(cache, listView, pathTbBox, service);
+        }
     }
 }

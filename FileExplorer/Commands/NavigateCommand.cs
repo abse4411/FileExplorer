@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileExplorer.Core.Commands;
@@ -33,8 +30,8 @@ namespace FileExplorer.Commands
 
         protected void ListView_LoadRoots()
         {
-            ListView.BeginUpdate();
             ListView.Clear();
+            ListView.BeginUpdate();
             var headers = ListViewItemFactory.GetDriverHeaderItems();
             foreach (var header in headers)
             {
@@ -50,14 +47,13 @@ namespace FileExplorer.Commands
         }
         protected async Task<bool> ListView_LoadItems(string path)
         {
+            ListView.Clear();
             if (!Directory.Exists(path))
             {
-                ListView.Clear();
                 return false;
             }
             ListView.BeginUpdate();
-            ListView.Clear();
-            var headers = ListViewItemFactory.GetFIleHeaderItems();
+            var headers = ListViewItemFactory.GetFileHeaderItems();
             foreach (var header in headers)
             {
                 ListView.Columns.Add(header);

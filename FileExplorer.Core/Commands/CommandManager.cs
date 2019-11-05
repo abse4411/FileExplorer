@@ -16,7 +16,7 @@ namespace FileExplorer.Core.Commands
                 throw new ArgumentNullException(nameof(command));
             ExecuteResult result;
             commands.Push(command);
-            if (command.CanDo)
+            if (CanDo(command))
                 result =await command.ExecuteAsync();
             else
                 result=new ExecuteResult(false, $"Can execute this command {command}");

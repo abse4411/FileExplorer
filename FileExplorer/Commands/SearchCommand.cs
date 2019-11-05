@@ -33,10 +33,10 @@ namespace FileExplorer.Commands
             var path = Cache.PathHistory[Cache.HistoryMark];
             if (string.IsNullOrWhiteSpace(path) || 
                 string.IsNullOrWhiteSpace(Pattern) || !Directory.Exists(path))
-                return new ExecuteResult(false, "Invalid path or pattern");
+                return new ExecuteResult(false, "Invalid search path or pattern");
             ListView.Clear();
             ListView.BeginUpdate();
-            var headers = ListViewItemFactory.GetFIleHeaderItems();
+            var headers = ListViewItemFactory.GetFileHeaderItems();
             foreach (var header in headers)
             {
                 ListView.Columns.Add(header);

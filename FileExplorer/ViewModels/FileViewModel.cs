@@ -2,11 +2,7 @@
 using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
 using FileExplorer.Factories;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,41 +29,44 @@ namespace FileExplorer.ViewModels
             DialogService = dialogService;
         }
 
+        public bool CanGoBack => Invoker.CanDo(CommandFactory.GetBackCommand(_cache, FileList, PathTb, FileService));
+        public bool CanGoForward=> Invoker.CanDo(CommandFactory.GetForwardCommand(_cache, FileList, PathTb, FileService));
+
         private void ShowError(ExecuteResult result)
         {
             if (!result.IsSuccessful)
                 DialogService.ShowErrorDialog("Error", result.Message);
         }
-        public async void Init()
+        public async Task Init()
         {
             var result = await Invoker.Execute(CommandFactory.GetInitCommand(_cache, FileList, FileTree, PathTb, FileService));
             ShowError(result);
         }
-        public async void Back()
+        public async Task GoBackAsync()
         {
             var result = await Invoker.Execute(CommandFactory.GetBackCommand(_cache, FileList, PathTb, FileService));
             ShowError(result);
         }
-        public async void Forward()
+        public async Task GoForwardAsync()
         {
             var result = await Invoker.Execute(CommandFactory.GetForwardCommand(_cache, FileList, PathTb, FileService));
             ShowError(result);
         }
-        public async void Refresh()
+        public async Task RefreshAsync()
         {
             var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(_cache, FileList, PathTb.Text, FileService));
             ShowError(result);
         }
-        public void LoadList()
+        public async Task LoadListAsync()
         {
-            LoadList(PathTb.Text);
+            await LoadListAsync(PathTb.Text);
         }
-        public async void LoadList(string path)
+        public async Task LoadListAsync(string path)
         {
             var result = await Invoker.Execute(CommandFactory.GetLoadCommand(_cache, FileList, path, FileService));
             ShowError(result);
         }
-        public void LoadListBySelectedNode()
+        public async Task LoadListBySelectedNodeAsync()
         {
             var selectedNode = FileTree.SelectedNode;
             if (selectedNode != null)
@@ -80,7 +79,7 @@ namespace FileExplorer.ViewModels
                         case FactoryConstants.Folder:
                         case FactoryConstants.PC:
                             PathTb.Text = selectedNode.Name;
-                            LoadList(selectedNode.Name);
+                            await LoadListAsync(selectedNode.Name);
                             break;
                         default:
                             return;
@@ -88,7 +87,7 @@ namespace FileExplorer.ViewModels
                 }
             }
         }
-        public void LoadListBySelectedItem()
+        public async Task LoadListBySelectedItemAsync()
         {
             if (FileList.SelectedItems.Count == 1)
             {
@@ -100,7 +99,7 @@ namespace FileExplorer.ViewModels
                         case FactoryConstants.Folder:
                         case FactoryConstants.Driver:
                             PathTb.Text = selectedItem.Name;
-                            LoadList(selectedItem.Name);
+                            await LoadListAsync(selectedItem.Name);
                             break;
                         case FactoryConstants.File:
                             Process.Start(selectedItem.Name);
@@ -111,12 +110,12 @@ namespace FileExplorer.ViewModels
                 }
             }
         }
-        public async void Search(string pattern)
+        public async Task SearchAsync(string pattern)
         {
             var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, _cache, pattern, FileService));
             ShowError(result);
         }
-        public async void LoadTree(TreeNode node)
+        public async Task LoadTreeAsync(TreeNode node)
         {
             if (node == null)
                 return;

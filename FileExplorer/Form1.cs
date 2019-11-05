@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Windows.Forms;
-using FileExplorer.Commands;
-using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
-using FileExplorer.Factories;
 using FileExplorer.Infrastructure.Services;
 using FileExplorer.Services;
 using FileExplorer.ViewModels;
@@ -35,13 +31,13 @@ namespace FileExplorer
             PrepareData();
         }
 
-        private void PrepareData()
+        private async void PrepareData()
         {
             FileTree.ImageList = SmallIconList;
             FileList.SmallImageList = SmallIconList;
             FileList.LargeImageList = LargeIconList;
             //await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
-            ViewModel.Init();
+            await ViewModel.Init();
             UpdateCountLabel();
         }
 
@@ -72,7 +68,7 @@ namespace FileExplorer
         }
         #endregion
 
-        private void FileList_DoubleClick(object sender, EventArgs e)
+        private async void FileList_DoubleClick(object sender, EventArgs e)
         {
             //if (FileList.SelectedItems.Count == 1)
             //{
@@ -97,29 +93,29 @@ namespace FileExplorer
             //        }
             //    }
             //}
-            ViewModel.LoadListBySelectedItem();
+            await ViewModel.LoadListBySelectedItemAsync();
             UpdateCountLabel();
         }
 
-        private void BackBtn_Click(object sender, EventArgs e)
+        private async void BackBtn_Click(object sender, EventArgs e)
         {
             //var result=await Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, FileService));
             //if (!result.IsSuccessful)
             //    DialogService.ShowErrorDialog("Error", result.Message);
-            ViewModel.Back();
+            await ViewModel.GoBackAsync();
             UpdateCountLabel();
         }
 
-        private void ForwardBtn_Click(object sender, EventArgs e)
+        private async void ForwardBtn_Click(object sender, EventArgs e)
         {
             //var result = await Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, FileService));
             //if (!result.IsSuccessful)
             //    DialogService.ShowErrorDialog("Error", result.Message);
-            ViewModel.Forward();
+            await ViewModel.GoForwardAsync();
             UpdateCountLabel();
         }
 
-        private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private async void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //Count++;
             //Debug.WriteLine($"========={Count}");
@@ -144,14 +140,15 @@ namespace FileExplorer
             //        }
             //    }
             //}
-            ViewModel.LoadListBySelectedNode();
+            await ViewModel.LoadListBySelectedNodeAsync();
+            UpdateCountLabel();
             //FileTree.SelectedNode = null;
         }
 
-        private void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
+        private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
             var node=e.Node;
-            ViewModel.LoadTree(node);
+            await ViewModel.LoadTreeAsync(node);
             //if(node == null)
             //    return;
             //var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(FileTree, node));
@@ -196,7 +193,7 @@ namespace FileExplorer
                 var itemY = (ListViewItem) y;
 
                 // Compare the two items
-                var compareResult = _objectCompare.Compare(itemX.SubItems[SortColumn].Text, itemY.SubItems[SortColumn].Text);
+                var compareResult = _objectCompare.Compare(itemX?.SubItems[SortColumn].Text, itemY?.SubItems[SortColumn].Text);
 
                 // Calculate correct return value based on object comparison
                 if (Order == SortOrder.Ascending)
@@ -244,29 +241,29 @@ namespace FileExplorer
         }
         #endregion
 
-        private void PathTb_KeyUp(object sender, KeyEventArgs e)
+        private async void PathTb_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 //var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
                 //if (!result.IsSuccessful)
                 //    DialogService.ShowErrorDialog("Error", result.Message);
-                ViewModel.LoadList();
+                await ViewModel.LoadListAsync();
                 UpdateCountLabel();
                 e.Handled = true;
             }
         }
 
-        private  void RefreshBtn_Click(object sender, EventArgs e)
+        private async void RefreshBtn_Click(object sender, EventArgs e)
         {
             //var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
             //if (!result.IsSuccessful)
             //    DialogService.ShowErrorDialog("Error", result.Message);
-            ViewModel.Refresh();
+            await ViewModel.RefreshAsync();
             UpdateCountLabel();
         }
 
-        private void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private async void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(SearchBox.SelectedItem?.ToString()))
             {
@@ -275,18 +272,19 @@ namespace FileExplorer
             //var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
             //if (!result.IsSuccessful)
             //    DialogService.ShowErrorDialog("Error", result.Message);
-            ViewModel.Search(SearchBox.SelectedItem.ToString());
+            await ViewModel.SearchAsync(SearchBox.SelectedItem.ToString());
             UpdateCountLabel();
         }
 
-        private void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        private async void SearchBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 if(string.IsNullOrWhiteSpace(SearchBox.Text))
                     return;
                 SearchBox.Items.Add(SearchBox.Text);
-                ViewModel.Search(SearchBox.Text);
+                await ViewModel.SearchAsync(SearchBox.Text);
+                UpdateCountLabel();
                 e.Handled = true;
             }
         }

@@ -22,7 +22,7 @@ namespace FileExplorer.Commands
             PathTb = pathTb;
         }
 
-        public override Task<ExecuteResult> ExecuteAsync()
+        public override async Task<ExecuteResult> ExecuteAsync()
         {
             PathTb.Text = Environment.MachineName;
             Cache.HistoryMark=0;
@@ -30,18 +30,18 @@ namespace FileExplorer.Commands
             Cache.PathHistory.Add(Environment.MachineName);
             try
             {
-                TreeView_LoadRoots();
+                await TreeView_LoadRoots();
                 ListView_LoadRoots();
             }
             catch (UnauthorizedAccessException e)
             {
                 Debug.WriteLine(e);
-                return Task.Run(() => new ExecuteResult(false, e.Message));
+                return new ExecuteResult(false, e.Message);
             }
-            return Task.Run(() => new ExecuteResult(true, String.Empty));
+            return new ExecuteResult(true, String.Empty);
         }
 
-        private async void TreeView_LoadRoots()
+        private async Task TreeView_LoadRoots()
         {
             FileTree.Nodes.Clear();
             FileTree.BeginUpdate();

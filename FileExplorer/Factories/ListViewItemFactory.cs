@@ -25,13 +25,13 @@ namespace FileExplorer.Factories
                     lvi.SubItems.Add(item.LastAccessTime.ToString(CultureInfo.CurrentCulture));
                     lvi.SubItems.Add(item.CreationTime.ToLongDateString());
                     lvi.Name = item.FullName;
+                    lvi.ToolTipText = item.Name;
                     if (item.IsDirectory)
                     {
                         lvi.SubItems.Add(FactoryConstants.Folder);
                         lvi.ImageIndex = 0;
                         lvi.SubItems.Add(string.Empty);
                         lvi.Tag = FactoryConstants.Folder;
-                        lvi.ToolTipText = item.Name;
                     }
                     else
                     {
@@ -39,7 +39,6 @@ namespace FileExplorer.Factories
                         lvi.ImageIndex = 1;
                         lvi.SubItems.Add((item.Length/ FactoryConstants.KB).ToString());
                         lvi.Tag = FactoryConstants.File;
-                        lvi.ToolTipText = item.Name;
                     }
                     result.Add(lvi);
                 }
@@ -47,7 +46,7 @@ namespace FileExplorer.Factories
             });
         }
 
-        public static IList<ColumnHeader> GetFIleHeaderItems()
+        public static IList<ColumnHeader> GetFileHeaderItems()
         {
             var headerStrings = new[] { "Name", "Last Write Time", "Last Access Time", "Creation Time", "Type", "Size(KB)" };
             var headers = new List<ColumnHeader>();

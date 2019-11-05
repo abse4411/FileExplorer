@@ -17,5 +17,7 @@ namespace FileExplorer.Core.Services
         Task<IList<FileItem>> FindFileItemsAsync(string path,string pattern, SearchOption option);
         Task<IList<FileItem>> FindFilesAsync(string path, string pattern, SearchOption option);
         Task<IList<FileItem>> FindDirectoriesAsync(string path, string pattern, SearchOption option);
+
+        
     }
 }

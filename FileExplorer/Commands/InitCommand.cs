@@ -25,7 +25,8 @@ namespace FileExplorer.Commands
         public override Task<ExecuteResult> ExecuteAsync()
         {
             PathTb.Text = Environment.MachineName;
-            Cache.HistoryMark++;
+            Cache.HistoryMark=0;
+            Cache.PathHistory.Clear();
             Cache.PathHistory.Add(Environment.MachineName);
             try
             {

@@ -8,6 +8,7 @@ using FileExplorer.Core.Services;
 using FileExplorer.Factories;
 using FileExplorer.Infrastructure.Services;
 using FileExplorer.Services;
+using FileExplorer.ViewModels;
 
 namespace FileExplorer
 {
@@ -15,8 +16,9 @@ namespace FileExplorer
     {
         public IDialogService DialogService;
         public IFileService FileService { get; }
-        public PathHistoryCache Cache { get; }
-        public CommandManager Invoker { get; }
+        public FileViewModel ViewModel;
+        //public PathHistoryCache Cache { get; }
+        //public CommandManager Invoker { get; }
         private readonly ListViewColumnSorter _lvwColumnSorter;
         //private int Count = 0;
 
@@ -25,19 +27,21 @@ namespace FileExplorer
             InitializeComponent();
             DialogService=new DialogService();
             FileService = new FileService();
-            Cache = new PathHistoryCache();
-            Invoker=new CommandManager();
+            ViewModel = new FileViewModel(FileList, FileTree, PathTb, FileService, DialogService);
+            //Cache = new PathHistoryCache();
+            //Invoker=new CommandManager();
             _lvwColumnSorter = new ListViewColumnSorter();
             FileList.ListViewItemSorter = _lvwColumnSorter;
             PrepareData();
         }
 
-        private async void PrepareData()
+        private void PrepareData()
         {
             FileTree.ImageList = SmallIconList;
             FileList.SmallImageList = SmallIconList;
             FileList.LargeImageList = LargeIconList;
-            await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
+            //await Invoker.Execute(CommandFactory.GetInitCommand(Cache, FileList,FileTree, PathTb, FileService));
+            ViewModel.Init();
             UpdateCountLabel();
         }
 
@@ -68,85 +72,91 @@ namespace FileExplorer
         }
         #endregion
 
-        private async void FileList_DoubleClick(object sender, EventArgs e)
+        private void FileList_DoubleClick(object sender, EventArgs e)
         {
-            if (FileList.SelectedItems.Count == 1)
-            {
-                var selectedItem = FileList.SelectedItems[0];
-                if (selectedItem.Tag is string type)
-                {
-                    switch (type)
-                    {
-                        case FactoryConstants.Folder:
-                        case FactoryConstants.Driver:
-                            PathTb.Text = selectedItem.Name;
-                            var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
-                            if (!result.IsSuccessful)
-                                DialogService.ShowErrorDialog("Error", result.Message);
-                            UpdateCountLabel();
-                            break;
-                        case FactoryConstants.File:
-                            Process.Start(selectedItem.Name);
-                            break;
-                        default:
-                            return;
-                    }
-                }
-            }
-        }
-
-        private async void BackBtn_Click(object sender, EventArgs e)
-        {
-            var result=await Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, FileService));
-            if (!result.IsSuccessful)
-                DialogService.ShowErrorDialog("Error", result.Message);
+            //if (FileList.SelectedItems.Count == 1)
+            //{
+            //    var selectedItem = FileList.SelectedItems[0];
+            //    if (selectedItem.Tag is string type)
+            //    {
+            //        switch (type)
+            //        {
+            //            case FactoryConstants.Folder:
+            //            case FactoryConstants.Driver:
+            //                PathTb.Text = selectedItem.Name;
+            //                var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+            //                if (!result.IsSuccessful)
+            //                    DialogService.ShowErrorDialog("Error", result.Message);
+            //                UpdateCountLabel();
+            //                break;
+            //            case FactoryConstants.File:
+            //                Process.Start(selectedItem.Name);
+            //                break;
+            //            default:
+            //                return;
+            //        }
+            //    }
+            //}
+            ViewModel.LoadListBySelectedItem();
             UpdateCountLabel();
         }
 
-        private async void ForwardBtn_Click(object sender, EventArgs e)
+        private void BackBtn_Click(object sender, EventArgs e)
         {
-            var result = await Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, FileService));
-            if (!result.IsSuccessful)
-                DialogService.ShowErrorDialog("Error", result.Message);
+            //var result=await Invoker.Execute(CommandFactory.GetBackCommand(Cache, FileList, PathTb, FileService));
+            //if (!result.IsSuccessful)
+            //    DialogService.ShowErrorDialog("Error", result.Message);
+            ViewModel.Back();
             UpdateCountLabel();
         }
 
-        private async void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private void ForwardBtn_Click(object sender, EventArgs e)
+        {
+            //var result = await Invoker.Execute(CommandFactory.GetForwardCommand(Cache, FileList, PathTb, FileService));
+            //if (!result.IsSuccessful)
+            //    DialogService.ShowErrorDialog("Error", result.Message);
+            ViewModel.Forward();
+            UpdateCountLabel();
+        }
+
+        private void FileTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //Count++;
             //Debug.WriteLine($"========={Count}");
-            var selectedNode = FileTree.SelectedNode;
-            if (selectedNode != null)
-            {
-                if (selectedNode.Tag is string type)
-                {
-                    switch (type)
-                    {
-                        case FactoryConstants.Driver:
-                        case FactoryConstants.Folder:
-                        case FactoryConstants.PC:
-                            PathTb.Text = selectedNode.Name;
-                            var result = await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
-                            if (!result.IsSuccessful)
-                                DialogService.ShowErrorDialog("Error", result.Message);
-                            UpdateCountLabel();
-                            break;
-                        default:
-                            return;
-                    }
-                }
-            }
-
+            //var selectedNode = FileTree.SelectedNode;
+            //if (selectedNode != null)
+            //{
+            //    if (selectedNode.Tag is string type)
+            //    {
+            //        switch (type)
+            //        {
+            //            case FactoryConstants.Driver:
+            //            case FactoryConstants.Folder:
+            //            case FactoryConstants.PC:
+            //                PathTb.Text = selectedNode.Name;
+            //                var result = await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+            //                if (!result.IsSuccessful)
+            //                    DialogService.ShowErrorDialog("Error", result.Message);
+            //                UpdateCountLabel();
+            //                break;
+            //            default:
+            //                return;
+            //        }
+            //    }
+            //}
+            ViewModel.LoadListBySelectedNode();
             //FileTree.SelectedNode = null;
         }
 
-        private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
+        private void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
-            if(e.Node==null)
-                return;
-            var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(FileTree, e.Node));
-            if (!result.IsSuccessful)
-                DialogService.ShowErrorDialog("Error", result.Message);
+            var node=e.Node;
+            ViewModel.LoadTree(node);
+            //if(node == null)
+            //    return;
+            //var result=await Invoker.Execute(CommandFactory.GetLoadTreeCommand(FileTree, node));
+            //if (!result.IsSuccessful)
+            //    DialogService.ShowErrorDialog("Error", result.Message);
         }
 
         #region Sort
@@ -234,50 +244,49 @@ namespace FileExplorer
         }
         #endregion
 
-        private async void PathTb_KeyUp(object sender, KeyEventArgs e)
+        private void PathTb_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
-                if (!result.IsSuccessful)
-                    DialogService.ShowErrorDialog("Error", result.Message);
+                //var result=await Invoker.Execute(CommandFactory.GetLoadCommand(Cache, FileList, PathTb.Text, FileService));
+                //if (!result.IsSuccessful)
+                //    DialogService.ShowErrorDialog("Error", result.Message);
+                ViewModel.LoadList();
                 UpdateCountLabel();
                 e.Handled = true;
             }
         }
 
-        private async void RefreshBtn_Click(object sender, EventArgs e)
+        private  void RefreshBtn_Click(object sender, EventArgs e)
         {
-            var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
-            if (!result.IsSuccessful)
-                DialogService.ShowErrorDialog("Error", result.Message);
+            //var result = await Invoker.Execute(CommandFactory.GetRefreshCommand(Cache, FileList, PathTb.Text, FileService));
+            //if (!result.IsSuccessful)
+            //    DialogService.ShowErrorDialog("Error", result.Message);
+            ViewModel.Refresh();
             UpdateCountLabel();
         }
 
-        private async void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
+        private void SearchBox_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(SearchBox.SelectedItem.ToString()))
+            if (string.IsNullOrWhiteSpace(SearchBox.SelectedItem?.ToString()))
             {
-                SearchBox.Items.Remove(SearchBox.SelectedItem.ToString());
                 return;
             }
-            var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
-            if (!result.IsSuccessful)
-                DialogService.ShowErrorDialog("Error", result.Message);
+            //var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
+            //if (!result.IsSuccessful)
+            //    DialogService.ShowErrorDialog("Error", result.Message);
+            ViewModel.Search(SearchBox.SelectedItem.ToString());
             UpdateCountLabel();
         }
 
-        private async void SearchBox_KeyUp(object sender, KeyEventArgs e)
+        private void SearchBox_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 if(string.IsNullOrWhiteSpace(SearchBox.Text))
                     return;
                 SearchBox.Items.Add(SearchBox.Text);
-                var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text,FileService));
-                if (!result.IsSuccessful)
-                    DialogService.ShowErrorDialog("Error", result.Message);
-                UpdateCountLabel();
+                ViewModel.Search(SearchBox.Text);
                 e.Handled = true;
             }
         }

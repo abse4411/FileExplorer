@@ -30,7 +30,7 @@ namespace FileExplorer.Commands
                     ListView_LoadRoots();
                 else if (!await ListView_LoadItems(path))
                 {
-                    return new ExecuteResult(false, "Directory \"{path}\" does not exist");
+                    return new ExecuteResult(false, $"Directory \"{path}\" does not exist");
                 }
             }
             catch (UnauthorizedAccessException e)

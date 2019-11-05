@@ -127,7 +127,7 @@ namespace FileExplorer.Infrastructure.Services
         {
             return await Task.Run(() =>
             {
-                //var result = new List<FileItemInfo>();
+                var result = new List<FileItemInfo>();
                 //foreach(var item in sources)
                 //{
                 //    if(item.IsDirectory)

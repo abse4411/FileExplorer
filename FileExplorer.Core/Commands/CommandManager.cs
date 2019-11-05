@@ -26,6 +26,13 @@ namespace FileExplorer.Core.Commands
             return result;
         }
 
+        public bool CanDo(Command command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+            return command.CanDo;
+        }
+
         public void Undo()
         {
             if (commands.Count > 0)

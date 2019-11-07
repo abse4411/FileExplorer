@@ -15,7 +15,7 @@ namespace FileExplorer.ViewModels
     {
         private readonly PathHistoryCache _cache;
         private FileOperation _currentOperation;
-        public IList<FileItemInfo> _selectedFileItems;
+        private readonly IList<FileItemInfo> _selectedFileItems;
         public CommandManager Invoker { get; }
         public ListView FileList { get; }
         public TreeView FileTree { get; }
@@ -24,7 +24,7 @@ namespace FileExplorer.ViewModels
         public IFileOperationService FileOperationService { get; }
         public IDialogService DialogService { get; }
 
-        public FileViewModel(ListView listView, TreeView treeView, TextBox pathTb, IFileService service,IFileOperationService fileOperationService, IDialogService dialogService)
+        public FileViewModel(ListView listView, TreeView treeView, TextBox pathTb, IFileService service, IFileOperationService fileOperationService, IDialogService dialogService)
         {
             _cache = new PathHistoryCache();
             _currentOperation = FileOperation.None;
@@ -50,13 +50,29 @@ namespace FileExplorer.ViewModels
         }
         public async Task GoBackAsync()
         {
-            var result = await Invoker.Execute(CommandFactory.GetBackCommand(_cache, FileList, PathTb, FileService));
-            ShowError(result);
+            var command = CommandFactory.GetBackCommand(_cache, FileList, PathTb, FileService);
+            if (Invoker.CanDo(command))
+            {
+                var result = await Invoker.Execute(command);
+                ShowError(result);
+            }
+            else
+            {
+                ShowError(new ExecuteResult(false, "Can not go back"));
+            }
         }
         public async Task GoForwardAsync()
         {
-            var result = await Invoker.Execute(CommandFactory.GetForwardCommand(_cache, FileList, PathTb, FileService));
-            ShowError(result);
+            var command = CommandFactory.GetForwardCommand(_cache, FileList, PathTb, FileService);
+            if (Invoker.CanDo(command))
+            {
+                var result = await Invoker.Execute(command);
+                ShowError(result);
+            }
+            else
+            {
+                ShowError(new ExecuteResult(false, "Can not go forward"));
+            }
         }
         public async Task RefreshAsync()
         {
@@ -151,7 +167,7 @@ namespace FileExplorer.ViewModels
                                 return false;
                         }
                     }
-                    _selectedFileItems.Add(new FileItemInfo(item.Text,item.Name, isDirectory));
+                    _selectedFileItems.Add(new FileItemInfo(item.Text, item.Name, isDirectory));
                 }
 
                 return true;
@@ -180,12 +196,16 @@ namespace FileExplorer.ViewModels
         {
             if (CreateFileItemInfosFromFileList())
             {
-                var result = await Invoker.Execute(CommandFactory.GetDeleteCommand(new FileOperationCache
+                if (DialogService.ShowWarmingDialog("Warming", "The items will permanently delete. Are you sure ?") ==
+                    Result.Yes)
                 {
-                    SelectedFileItem = _selectedFileItems
-                },FileOperationService));
-                ShowError(result);
-                await RefreshAsync();
+                    var result = await Invoker.Execute(CommandFactory.GetDeleteCommand(new FileOperationCache
+                    {
+                        SelectedFileItem = _selectedFileItems
+                    }, FileOperationService));
+                    ShowError(result);
+                    await RefreshAsync();
+                }
             }
         }
         public async Task PasteFileItemAsync()
@@ -212,17 +232,38 @@ namespace FileExplorer.ViewModels
                     await RefreshAsync();
                     break;
                 default:
-                    ShowError(new ExecuteResult(false,$"Unknown FileOperation:{_currentOperation}"));
+                    ShowError(new ExecuteResult(false, "No items to paste"));
                     return;
             }
         }
 
         public async Task UndoFileOperationAsync()
         {
-            var result =await Invoker.Undo();
-            ShowError(result);
-            _currentOperation = FileOperation.None;
-            await RefreshAsync();
+            if (Invoker.CommandCount > 0)
+            {
+                var result = await Invoker.Undo();
+                ShowError(result);
+                await RefreshAsync();
+            }
+            else
+            {
+                ShowError(new ExecuteResult(false, "No actions to undo"));
+            }
+        }
+
+        public void ShowCredits()
+        {
+            DialogService.ShowInformationDialog("Credits", @"
+folder , document  Icon made by Smashicons from www.flaticon.com
+hard-disk Icon made by srip from www.flaticon.com
+computer Icon made by DinosoftLabs from www.flaticon.com 
+left-arrow, right-arrow Icon made by Smashicons www.flaticon.com computer
+refresh Icon made by Pixel Buddha www.flaticon.com computer");
+        }
+
+        public void ShowAbout()
+        {
+            DialogService.ShowInformationDialog("About", "本程序仅供提交作业使用");
         }
     }
 }

@@ -33,6 +33,8 @@ namespace FileExplorer.Core.Commands
             return command.CanDo;
         }
 
+        public int CommandCount => commands.Count;
+
         public async Task<ExecuteResult> Undo()
         {
             ICommand command=null;

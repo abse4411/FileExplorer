@@ -12,8 +12,10 @@ namespace FileExplorer
     {
         public IDialogService DialogService;
         public IFileService FileService { get; }
-        public IFileOperationService FileOperationService { get;}
+        public IFileOperationService FileOperationService { get; }
+
         public FileViewModel ViewModel;
+
         //public PathHistoryCache Cache { get; }
         //public CommandManager Invoker { get; }
         private readonly ListViewColumnSorter _lvwColumnSorter;
@@ -22,14 +24,15 @@ namespace FileExplorer
         public Form1()
         {
             InitializeComponent();
-            DialogService=new DialogService();
+            DialogService = new DialogService();
             FileService = new FileService();
-            FileOperationService=new FileOperationService();
+            FileOperationService = new FileOperationService();
             ViewModel = new FileViewModel(FileList, FileTree, PathTb, FileService, FileOperationService, DialogService);
             //Cache = new PathHistoryCache();
             //Invoker=new CommandManager();
             _lvwColumnSorter = new ListViewColumnSorter();
             FileList.ListViewItemSorter = _lvwColumnSorter;
+            FileList.ContextMenuStrip = contextMenuStrip1;
             PrepareData();
         }
 
@@ -44,6 +47,7 @@ namespace FileExplorer
         }
 
         #region ChangeView
+
         private void detailToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileList.View = View.Details;
@@ -68,6 +72,7 @@ namespace FileExplorer
             FileList.View = View.List;
             //FileList.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
+
         #endregion
 
         private async void FileList_DoubleClick(object sender, EventArgs e)
@@ -149,7 +154,7 @@ namespace FileExplorer
 
         private async void FileTree_AfterExpand(object sender, TreeViewEventArgs e)
         {
-            var node=e.Node;
+            var node = e.Node;
             await ViewModel.LoadTreeAsync(node);
             //if(node == null)
             //    return;
@@ -159,6 +164,7 @@ namespace FileExplorer
         }
 
         #region Sort
+
         public class ListViewColumnSorter : IComparer
         {
 
@@ -195,7 +201,8 @@ namespace FileExplorer
                 var itemY = (ListViewItem) y;
 
                 // Compare the two items
-                var compareResult = _objectCompare.Compare(itemX?.SubItems[SortColumn].Text, itemY?.SubItems[SortColumn].Text);
+                var compareResult =
+                    _objectCompare.Compare(itemX?.SubItems[SortColumn].Text, itemY?.SubItems[SortColumn].Text);
 
                 // Calculate correct return value based on object comparison
                 if (Order == SortOrder.Ascending)
@@ -231,7 +238,9 @@ namespace FileExplorer
             if (e.Column == _lvwColumnSorter.SortColumn)
             {
                 // Reverse the current sort direction for this column.
-                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+                _lvwColumnSorter.Order = _lvwColumnSorter.Order == SortOrder.Ascending
+                    ? SortOrder.Descending
+                    : SortOrder.Ascending;
             }
             else
             {
@@ -239,8 +248,10 @@ namespace FileExplorer
                 _lvwColumnSorter.SortColumn = e.Column;
                 _lvwColumnSorter.Order = SortOrder.Ascending;
             }
+
             FileList.Sort();
         }
+
         #endregion
 
         private async void PathTb_KeyUp(object sender, KeyEventArgs e)
@@ -271,6 +282,7 @@ namespace FileExplorer
             {
                 return;
             }
+
             //var result = await Invoker.Execute(CommandFactory.GetSearchCommand(FileList, Cache, SearchBox.Text, FileService));
             //if (!result.IsSuccessful)
             //    DialogService.ShowErrorDialog("Error", result.Message);
@@ -282,7 +294,7 @@ namespace FileExplorer
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if(string.IsNullOrWhiteSpace(SearchBox.Text))
+                if (string.IsNullOrWhiteSpace(SearchBox.Text))
                     return;
                 SearchBox.Items.Add(SearchBox.Text);
                 await ViewModel.SearchAsync(SearchBox.Text);
@@ -314,7 +326,7 @@ namespace FileExplorer
 
         private void UpdateCountLabel()
         {
-            CountLabel.Text= $"{FileList.Items.Count} item(s)        |";
+            CountLabel.Text = $"{FileList.Items.Count} item(s)        |";
             FileList_ItemSelectionChanged(null, null);
         }
 
@@ -346,6 +358,43 @@ namespace FileExplorer
         private async void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await ViewModel.UndoFileOperationAsync();
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (FileList.SelectedItems.Count > 0)
+            {
+                copyToolStripMenuItem1.Visible = true;
+                cutToolStripMenuItem1.Visible = true;
+                deleteToolStripMenuItem1.Visible = true;
+                pasteToolStripMenuItem1.Visible = false;
+            }
+            else
+            {
+                copyToolStripMenuItem1.Visible = false;
+                cutToolStripMenuItem1.Visible = false;
+                deleteToolStripMenuItem1.Visible = false;
+                pasteToolStripMenuItem1.Visible = true;
+            }
+        }
+
+        private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewModel.ShowCredits();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ViewModel.ShowAbout();
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                contextMenuStrip1.Show(FileList, e.Location);
+                MessageBox.Show("MouseButton Right Clicked");
+            }
         }
     }
 }

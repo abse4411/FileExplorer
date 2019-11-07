@@ -9,7 +9,7 @@ using FileExplorer.Core.Services;
 
 namespace FileExplorer.Infrastructure.Services
 {
-    public class FileOperationService: IFileOperationService
+    public class FileOperationService : IFileOperationService
     {
         #region Copy
         public async Task<IList<FileItemRestoreInfo>> CopyFileItem(IList<FileItemInfo> sources, string targetPath, bool overwrite)
@@ -399,12 +399,26 @@ namespace FileExplorer.Infrastructure.Services
                 var files = Directory.EnumerateFiles(targetPath);
                 foreach (var file in files)
                 {
-                    File.Delete(file);
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine((e));
+                    }
                 }
                 var dirs = Directory.EnumerateDirectories(targetPath);
                 foreach (var dir in dirs)
                 {
-                    DeleteDirectory(dir);
+                    try
+                    {
+                        DeleteDirectory(dir);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine((e));
+                    }
                 }
                 Directory.Delete(targetPath);
             }

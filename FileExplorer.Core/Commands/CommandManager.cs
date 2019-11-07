@@ -8,9 +8,9 @@ namespace FileExplorer.Core.Commands
 {
     public class CommandManager
     {
-        private readonly Stack<Command> commands = new Stack<Command>();
+        private readonly Stack<ICommand> commands = new Stack<ICommand>();
 
-        public async Task<ExecuteResult> Execute(Command command)
+        public async Task<ExecuteResult> Execute(ICommand command)
         {
             if(command==null)
                 throw new ArgumentNullException(nameof(command));
@@ -26,7 +26,7 @@ namespace FileExplorer.Core.Commands
             return result;
         }
 
-        public bool CanDo(Command command)
+        public bool CanDo(ICommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));

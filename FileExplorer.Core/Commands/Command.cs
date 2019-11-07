@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace FileExplorer.Core.Commands
 {
-    public abstract class Command
+    public interface ICommand
     {
-        public abstract Task<ExecuteResult> ExecuteAsync();
+        Task<ExecuteResult> ExecuteAsync();
 
-        public abstract void Undo();
+        Task<ExecuteResult> Undo();
 
-        public virtual bool CanDo { get; }
+        bool CanDo { get; }
 
-        public virtual bool CanUndo { get; }
+        bool CanUndo { get; }
     }
 }

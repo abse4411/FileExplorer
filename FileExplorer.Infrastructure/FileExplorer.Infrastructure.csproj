@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CopyCommand.cs" />
+    <Compile Include="Common\FileOperationCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\EnumerateFileItemOption.cs" />
     <Compile Include="Services\FileOperationService.cs" />

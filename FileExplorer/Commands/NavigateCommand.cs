@@ -8,7 +8,7 @@ using FileExplorer.Factories;
 
 namespace FileExplorer.Commands
 {
-    public abstract class NavigateCommand : Command
+    public abstract class NavigateCommand : ICommand
     {
         protected PathHistoryCache Cache { get; }
         protected ListView ListView { get; }
@@ -21,12 +21,13 @@ namespace FileExplorer.Commands
             Service = service;
         }
 
-        public override void Undo()
+        public Task<ExecuteResult> Undo()
         {
             throw new NotImplementedException();
         }
 
-        public override bool CanUndo { get; } = false;
+        public bool CanUndo { get; } = false;
+        public abstract bool CanDo { get; }
 
         protected void ListView_LoadRoots()
         {
@@ -70,5 +71,7 @@ namespace FileExplorer.Commands
             ListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             return true;
         }
+
+        public abstract Task<ExecuteResult> ExecuteAsync();
     }
 }

@@ -13,7 +13,7 @@ using FileExplorer.Factories;
 
 namespace FileExplorer.Commands
 {
-    public class SearchCommand: Command
+    public class SearchCommand: ICommand
     {
         public ListView ListView { get; }
         public PathHistoryCache Cache { get; }
@@ -28,7 +28,7 @@ namespace FileExplorer.Commands
             Service = service;
         }
 
-        public override async Task<ExecuteResult> ExecuteAsync()
+        public async Task<ExecuteResult> ExecuteAsync()
         {
             var path = Cache.PathHistory[Cache.HistoryMark];
             if (string.IsNullOrWhiteSpace(path) || 
@@ -63,11 +63,13 @@ namespace FileExplorer.Commands
                 return new ExecuteResult(true, string.Empty);
         }
 
-        public override void Undo()
+        public Task<ExecuteResult> Undo()
         {
             throw new NotImplementedException();
         }
 
-        public override bool CanDo => Cache.HistoryMark>-1;
+        public bool CanDo => Cache.HistoryMark>-1;
+
+        public bool CanUndo => false;
     }
 }

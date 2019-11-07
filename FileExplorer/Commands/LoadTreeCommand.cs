@@ -12,7 +12,7 @@ using FileExplorer.Factories;
 
 namespace FileExplorer.Commands
 {
-    public class LoadTreeCommand : Command
+    public class LoadTreeCommand : ICommand
     {
         public TreeNode TargetNode { get; }
         public TreeView TreeView { get; }
@@ -23,7 +23,7 @@ namespace FileExplorer.Commands
             TreeView = treeView;
         }
 
-        public override async Task<ExecuteResult> ExecuteAsync()
+        public async Task<ExecuteResult> ExecuteAsync()
         {
             var type = TargetNode.Tag as string;
             switch (type)
@@ -99,12 +99,12 @@ namespace FileExplorer.Commands
             return new ExecuteResult(true, String.Empty);
         }
 
-        public override void Undo()
+        public Task<ExecuteResult> Undo()
         {
             throw new NotImplementedException();
         }
 
-        public override bool CanDo
+        public bool CanDo
         {
             get
             {
@@ -114,6 +114,6 @@ namespace FileExplorer.Commands
             }
         }
 
-        public override bool CanUndo { get; } = false;
+        public bool CanUndo { get; } = false;
     }
 }

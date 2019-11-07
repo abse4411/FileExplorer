@@ -19,7 +19,7 @@ namespace FileExplorer.Commands
         public override async Task<ExecuteResult> ExecuteAsync()
         {
             if(string.IsNullOrWhiteSpace(Path))
-                return new ExecuteResult(true, String.Empty);
+                return new ExecuteResult(false, "Path must be not empty or null");
             Cache.HistoryMark++;
             if (Cache.HistoryMark <= Cache.PathHistory.Count - 1)
                 Cache.PathHistory.RemoveRange(Cache.HistoryMark, Cache.PathHistory.Count - Cache.HistoryMark);

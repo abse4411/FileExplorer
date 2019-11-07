@@ -15,6 +15,5 @@ namespace FileExplorer.Infrastructure.Common
     {
         public IList<FileItemRestoreInfo> RestoreInfos { get; set; }
         public IList<FileItemInfo> SelectedFileItem { get; set; }
-        public FileOperation CurrentOperation { get; set; }
     }
 }

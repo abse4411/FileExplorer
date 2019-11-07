@@ -1,36 +1,42 @@
-﻿using FileExplorer.Commands;
+﻿using System.Collections.Generic;
+using FileExplorer.Commands;
 using FileExplorer.Core.Commands;
 using FileExplorer.Core.Services;
 using FileExplorer.Factories;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FileExplorer.Core.Models;
+using FileExplorer.Infrastructure.Common;
 
 namespace FileExplorer.ViewModels
 {
     public class FileViewModel
     {
         private readonly PathHistoryCache _cache;
+        private FileOperation _currentOperation;
+        public IList<FileItemInfo> _selectedFileItems;
         public CommandManager Invoker { get; }
         public ListView FileList { get; }
         public TreeView FileTree { get; }
         public TextBox PathTb { get; }
         public IFileService FileService { get; }
+        public IFileOperationService FileOperationService { get; }
         public IDialogService DialogService { get; }
 
-        public FileViewModel(ListView listView, TreeView treeView, TextBox pathTb, IFileService service, IDialogService dialogService)
+        public FileViewModel(ListView listView, TreeView treeView, TextBox pathTb, IFileService service,IFileOperationService fileOperationService, IDialogService dialogService)
         {
             _cache = new PathHistoryCache();
+            _currentOperation = FileOperation.None;
+            _selectedFileItems = new List<FileItemInfo>();
             Invoker = new CommandManager();
             FileList = listView;
             FileTree = treeView;
             PathTb = pathTb;
             FileService = service;
+            FileOperationService = fileOperationService;
             DialogService = dialogService;
         }
-
-        public bool CanGoBack => Invoker.CanDo(CommandFactory.GetBackCommand(_cache, FileList, PathTb, FileService));
-        public bool CanGoForward=> Invoker.CanDo(CommandFactory.GetForwardCommand(_cache, FileList, PathTb, FileService));
 
         private void ShowError(ExecuteResult result)
         {
@@ -121,6 +127,102 @@ namespace FileExplorer.ViewModels
                 return;
             var result = await Invoker.Execute(CommandFactory.GetLoadTreeCommand(FileTree, node));
             ShowError(result);
+        }
+
+        private bool CreateFileItemInfosFromFileList()
+        {
+            if (FileList.SelectedItems.Count > 0)
+            {
+                _selectedFileItems.Clear();
+                foreach (ListViewItem item in FileList.SelectedItems)
+                {
+                    bool isDirectory = false;
+                    if (item.Tag is string type)
+                    {
+                        switch (type)
+                        {
+                            case FactoryConstants.Folder:
+                                isDirectory = true;
+                                break;
+                            case FactoryConstants.File:
+                                break;
+                            default:
+                                ShowError(new ExecuteResult(false, $"Can not operate those item(s)"));
+                                return false;
+                        }
+                    }
+                    _selectedFileItems.Add(new FileItemInfo(item.Text,item.Name, isDirectory));
+                }
+
+                return true;
+            }
+            else
+            {
+                ShowError(new ExecuteResult(false, "No files or directories are selected"));
+                return false;
+            }
+        }
+        public void CopyFileItem()
+        {
+            if (CreateFileItemInfosFromFileList())
+            {
+                _currentOperation = FileOperation.Copy;
+            }
+        }
+        public void CutFileItem()
+        {
+            if (CreateFileItemInfosFromFileList())
+            {
+                _currentOperation = FileOperation.Cut;
+            }
+        }
+        public async Task DeleteFileItemAsync()
+        {
+            if (CreateFileItemInfosFromFileList())
+            {
+                var result = await Invoker.Execute(CommandFactory.GetDeleteCommand(new FileOperationCache
+                {
+                    SelectedFileItem = _selectedFileItems
+                },FileOperationService));
+                ShowError(result);
+                await RefreshAsync();
+            }
+        }
+        public async Task PasteFileItemAsync()
+        {
+            ExecuteResult result;
+            switch (_currentOperation)
+            {
+                case FileOperation.Copy:
+                    result = await Invoker.Execute(CommandFactory.GetCopyCommand(new FileOperationCache
+                    {
+                        SelectedFileItem = _selectedFileItems
+                    }, _cache.PathHistory[_cache.HistoryMark], FileOperationService));
+                    ShowError(result);
+                    await RefreshAsync();
+                    break;
+                case FileOperation.Cut:
+                    result = await Invoker.Execute(CommandFactory.GetCutCommand(new FileOperationCache
+                    {
+                        SelectedFileItem = _selectedFileItems
+                    }, _cache.PathHistory[_cache.HistoryMark], FileOperationService));
+                    _currentOperation = FileOperation.None;
+                    _selectedFileItems.Clear();
+                    ShowError(result);
+                    await RefreshAsync();
+                    break;
+                default:
+                    ShowError(new ExecuteResult(false,$"Unknown FileOperation:{_currentOperation}"));
+                    return;
+            }
+        }
+
+        public async Task UndoFileOperationAsync()
+        {
+            var result =await Invoker.Undo();
+            ShowError(result);
+            _currentOperation = FileOperation.None;
+            await RefreshAsync();
         }
     }
 }

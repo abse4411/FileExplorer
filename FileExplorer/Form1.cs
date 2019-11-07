@@ -12,6 +12,7 @@ namespace FileExplorer
     {
         public IDialogService DialogService;
         public IFileService FileService { get; }
+        public IFileOperationService FileOperationService { get;}
         public FileViewModel ViewModel;
         //public PathHistoryCache Cache { get; }
         //public CommandManager Invoker { get; }
@@ -23,7 +24,8 @@ namespace FileExplorer
             InitializeComponent();
             DialogService=new DialogService();
             FileService = new FileService();
-            ViewModel = new FileViewModel(FileList, FileTree, PathTb, FileService, DialogService);
+            FileOperationService=new FileOperationService();
+            ViewModel = new FileViewModel(FileList, FileTree, PathTb, FileService, FileOperationService, DialogService);
             //Cache = new PathHistoryCache();
             //Invoker=new CommandManager();
             _lvwColumnSorter = new ListViewColumnSorter();
@@ -319,6 +321,31 @@ namespace FileExplorer
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewModel.CopyFileItem();
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ViewModel.CutFileItem();
+        }
+
+        private async void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await ViewModel.DeleteFileItemAsync();
+        }
+
+        private async void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await ViewModel.PasteFileItemAsync();
+        }
+
+        private async void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await ViewModel.UndoFileOperationAsync();
         }
     }
 }

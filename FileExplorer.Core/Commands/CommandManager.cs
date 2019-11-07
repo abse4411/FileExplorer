@@ -33,14 +33,16 @@ namespace FileExplorer.Core.Commands
             return command.CanDo;
         }
 
-        public void Undo()
+        public async Task<ExecuteResult> Undo()
         {
+            ICommand command=null;
             if (commands.Count > 0)
             {
-                var command = commands.Pop();
+                command = commands.Pop();
                 if(command.CanUndo)
-                    command.Undo();
+                    return await command.Undo();
             }
+            return new ExecuteResult(false, $"Can execute this command {command}");
         }
     }
 }

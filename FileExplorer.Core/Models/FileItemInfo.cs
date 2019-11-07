@@ -6,9 +6,10 @@
         public string FullName { get; set; }
         public bool IsDirectory { get; set; }
         public FileItemInfo() { }
-        public FileItemInfo(string name,bool isDirectory)
+        public FileItemInfo(string name,string fullName,bool isDirectory)
         {
             Name = name;
+            FullName = fullName;
             IsDirectory = isDirectory;
         }
     }

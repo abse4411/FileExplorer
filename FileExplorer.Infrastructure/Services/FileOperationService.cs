@@ -164,6 +164,7 @@ namespace FileExplorer.Infrastructure.Services
                         });
                     }
                 }
+                result.Reverse();
                 return result;
             });
         }
@@ -279,6 +280,8 @@ namespace FileExplorer.Infrastructure.Services
             {
                 MoveDirectory(dir, path, overwrite, result);
             }
+
+            var sourceName = sourceInfo.FullName;
             try
             {
                 sourceInfo.Delete();
@@ -290,7 +293,7 @@ namespace FileExplorer.Infrastructure.Services
             }
             result.Add(new FileItemRestoreInfo
             {
-                SourceName = sourceInfo.FullName,
+                SourceName = sourceName,
                 TargetName = path,
                 IsDirectory = true
             });
@@ -301,9 +304,9 @@ namespace FileExplorer.Infrastructure.Services
             return await Task.Run(() =>
             {
                 var result = new List<FileItemRestoreInfo>();
-                var emptydirs = new List<string>();
-                var undoList = sources.Reverse();
-                foreach (var item in undoList)
+                var emptyDirs = new List<string>();
+                var redoList = sources.Reverse();
+                foreach (var item in redoList)
                 {
                     if (!item.IsDirectory)
                     {
@@ -334,11 +337,12 @@ namespace FileExplorer.Infrastructure.Services
                                 TargetName = item.SourceName,
                                 IsDirectory = true
                             });
-                            emptydirs.Add(item.TargetName);
+                            emptyDirs.Add(item.TargetName);
                         }
                     }
                 }
-                foreach (var dir in emptydirs)
+                emptyDirs.Reverse();
+                foreach (var dir in emptyDirs)
                 {
                     try
                     {

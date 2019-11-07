@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FileExplorer.Commands;
 using FileExplorer.Core.Services;
+using FileExplorer.Infrastructure.Commands;
+using FileExplorer.Infrastructure.Common;
 
 namespace FileExplorer.Factories
 {
@@ -44,6 +46,19 @@ namespace FileExplorer.Factories
         public static SearchCommand GetSearchCommand(ListView listView, PathHistoryCache cache, string pattern, IFileService service)
         {
             return new SearchCommand( listView, cache, pattern,service);
+        }
+
+        public static CopyCommand GetCopyCommand(FileOperationCache cache, string targetPath, IFileOperationService service)
+        {
+            return new CopyCommand( cache, targetPath, service);
+        }
+        public static CutCommand GetCutCommand(FileOperationCache cache, string targetPath, IFileOperationService service)
+        {
+            return new CutCommand(cache, targetPath, service);
+        }
+        public static DeleteCommand GetDeleteCommand(FileOperationCache cache, IFileOperationService service)
+        {
+            return new DeleteCommand(cache, service);
         }
     }
 }

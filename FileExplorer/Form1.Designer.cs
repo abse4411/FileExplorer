@@ -34,6 +34,7 @@
             this.LargeIconList = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.CountLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SelectLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileTree = new System.Windows.Forms.TreeView();
             this.FileList = new System.Windows.Forms.ListView();
@@ -51,7 +52,6 @@
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +65,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creditsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.SelectLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -112,6 +111,11 @@
             this.CountLabel.Name = "CountLabel";
             this.CountLabel.Size = new System.Drawing.Size(13, 20);
             this.CountLabel.Text = " ";
+            // 
+            // SelectLabel
+            // 
+            this.SelectLabel.Name = "SelectLabel";
+            this.SelectLabel.Size = new System.Drawing.Size(0, 20);
             // 
             // splitContainer1
             // 
@@ -275,7 +279,7 @@
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(161, 26);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -285,8 +289,7 @@
             this.copyToolStripMenuItem,
             this.cutToolStripMenuItem,
             this.deleteToolStripMenuItem,
-            this.pasteToolStripMenuItem,
-            this.renameToolStripMenuItem});
+            this.pasteToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
             this.toolStripMenuItem1.Size = new System.Drawing.Size(47, 24);
@@ -296,36 +299,29 @@
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.copyToolStripMenuItem.Text = "Copy";
             // 
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.cutToolStripMenuItem.Text = "Paste";
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.deleteToolStripMenuItem.Text = "Cut";
             // 
             // pasteToolStripMenuItem
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.pasteToolStripMenuItem.Text = "Delete";
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(169, 26);
-            this.renameToolStripMenuItem.Text = "Rename";
             // 
             // editToolStripMenuItem
             // 
@@ -430,11 +426,6 @@
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(211, 26);
             this.aboutToolStripMenuItem1.Text = "About File Explorer";
             // 
-            // SelectLabel
-            // 
-            this.SelectLabel.Name = "SelectLabel";
-            this.SelectLabel.Size = new System.Drawing.Size(0, 20);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -497,7 +488,6 @@
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel CountLabel;
         private System.Windows.Forms.ToolStripStatusLabel SelectLabel;
     }

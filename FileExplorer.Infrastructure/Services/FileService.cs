@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Core.Models;
 using FileExplorer.Core.Services;
+using FileExplorer.Infrastructure.Common;
 
-namespace FileExplorer.Core.Services
+namespace FileExplorer.Infrastructure.Services
 {
     public class FileService : IFileService
     {

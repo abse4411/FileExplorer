@@ -4,11 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FileExplorer.Core.Models;
 using FileExplorer.Core.Services;
 
 namespace FileExplorer.Infrastructure.Services
 {
-    public class FileOperationService
+    public class FileOperationService: IFileOperationService
     {
         #region Copy
         public async Task<IList<FileItemRestoreInfo>> CopyFileItem(IList<FileItemInfo> sources, string targetPath, bool overwrite)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FileExplorer.Core.Services;
 
@@ -118,10 +119,57 @@ namespace FileExplorer.Infrastructure.Services
             }
             return true;
         }
+
+        public async Task<IList<FileItemRestoreInfo>> UndoCopy(IList<FileItemRestoreInfo> sources)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new List<FileItemRestoreInfo>();
+                var undoList = sources.Reverse();
+                foreach (var item in undoList)
+                {
+                    if (!item.IsDirectory)
+                    {
+                        try
+                        {
+                            File.Delete(item.TargetName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine((e));
+                        }
+                        result.Add(new FileItemRestoreInfo
+                        {
+                            SourceName = item.TargetName,
+                            TargetName = string.Empty,
+                            IsDirectory = false
+                        });
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Directory.Delete(item.TargetName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine((e));
+                        }
+                        result.Add(new FileItemRestoreInfo
+                        {
+                            SourceName = item.TargetName,
+                            TargetName = string.Empty,
+                            IsDirectory = true
+                        });
+                    }
+                }
+                return result;
+            });
+        }
         #endregion
 
         #region Move
-        public async Task<IList<FileItemRestoreInfo>> MoveFileItem(IList<FileItemInfo> sources, string targetPath,bool overwrite)
+        public async Task<IList<FileItemRestoreInfo>> MoveFileItem(IList<FileItemInfo> sources, string targetPath, bool overwrite)
         {
             return await Task.Run(() =>
             {
@@ -133,7 +181,7 @@ namespace FileExplorer.Infrastructure.Services
                     if (!item.IsDirectory)
                     {
                         var targetName = Path.Combine(targetPath, item.Name);
-                        if (MoveFile(item.FullName, targetName))
+                        if (MoveFile(item.FullName, targetName, overwrite))
                             result.Add(new FileItemRestoreInfo
                             {
                                 SourceName = item.FullName,
@@ -143,14 +191,17 @@ namespace FileExplorer.Infrastructure.Services
                     }
                     else
                     {
-                        var targetName = Path.Combine(targetPath, item.Name);
-                        if (MoveDirectory(item.FullName, targetName))
-                            result.Add(new FileItemRestoreInfo
-                            {
-                                SourceName = item.FullName,
-                                TargetName = targetName,
-                                IsDirectory = true
-                            });
+                        DirectoryInfo directory;
+                        try
+                        {
+                            directory = new DirectoryInfo(item.FullName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine((e));
+                            continue;
+                        }
+                        MoveDirectory(directory, targetPath, overwrite, result);
                     }
                 }
 
@@ -158,10 +209,15 @@ namespace FileExplorer.Infrastructure.Services
             });
         }
 
-        private static bool MoveFile(string sourceFullName, string targetFullName)
+        private static bool MoveFile(string sourceFullName, string targetFullName, bool overwrite)
         {
             try
             {
+                if (overwrite)
+                {
+                    if (File.Exists(targetFullName))
+                        File.Delete(targetFullName);
+                }
                 File.Move(sourceFullName, targetFullName);
             }
             catch (Exception e)
@@ -169,22 +225,133 @@ namespace FileExplorer.Infrastructure.Services
                 Console.WriteLine(e);
                 return false;
             }
-
             return true;
         }
 
-        private static bool MoveDirectory(string sourcePath, string targetPath)
+        private static void MoveDirectory(DirectoryInfo sourceInfo, string targetPath, bool overwrite, IList<FileItemRestoreInfo> result)
         {
+            string path = Path.Combine(targetPath, sourceInfo.Name);
+            if (!Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine((e));
+                    return;
+                }
+            }
+            IEnumerable<FileInfo> files;
             try
             {
-                Directory.Move(sourcePath,targetPath);
+                files = sourceInfo.EnumerateFiles();
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return false;
+                Debug.WriteLine(e);
+                return;
             }
-            return true;
+            foreach (var file in files)
+            {
+                var targetName = Path.Combine(path, file.Name);
+                if (MoveFile(file.FullName, targetName, overwrite))
+                    result.Add(new FileItemRestoreInfo
+                    {
+                        SourceName = file.FullName,
+                        TargetName = targetName,
+                        IsDirectory = false
+                    });
+            }
+            IEnumerable<DirectoryInfo> dirs;
+            try
+            {
+                dirs = sourceInfo.EnumerateDirectories();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return;
+            }
+            foreach (var dir in dirs)
+            {
+                MoveDirectory(dir, path, overwrite, result);
+            }
+            try
+            {
+                sourceInfo.Delete();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                return;
+            }
+            result.Add(new FileItemRestoreInfo
+            {
+                SourceName = sourceInfo.FullName,
+                TargetName = path,
+                IsDirectory = true
+            });
+        }
+
+        public async Task<IList<FileItemRestoreInfo>> UndoMove(IList<FileItemRestoreInfo> sources, bool overwrite)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new List<FileItemRestoreInfo>();
+                var emptydirs = new List<string>();
+                var undoList = sources.Reverse();
+                foreach (var item in undoList)
+                {
+                    if (!item.IsDirectory)
+                    {
+                        if (MoveFile(item.TargetName, item.SourceName, overwrite))
+                            result.Add(new FileItemRestoreInfo
+                            {
+                                SourceName = item.TargetName,
+                                TargetName = item.SourceName,
+                                IsDirectory = false
+                            });
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(item.SourceName))
+                        {
+                            try
+                            {
+                                Directory.CreateDirectory(item.SourceName);
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine((e));
+                                continue;
+                            }
+                            result.Add(new FileItemRestoreInfo
+                            {
+                                SourceName = item.TargetName,
+                                TargetName = item.SourceName,
+                                IsDirectory = true
+                            });
+                            emptydirs.Add(item.TargetName);
+                        }
+                    }
+                }
+                foreach (var dir in emptydirs)
+                {
+                    try
+                    {
+                        Directory.Delete(dir);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine((e));
+                        continue;
+                    }
+                }
+                return result;
+            });
+
         }
         #endregion
 
@@ -212,7 +379,7 @@ namespace FileExplorer.Infrastructure.Services
                     {
                         try
                         {
-                            Directory.Delete(item.FullName);
+                            DeleteDirectory(item.FullName);
                         }
                         catch (Exception e)
                         {
@@ -224,6 +391,29 @@ namespace FileExplorer.Infrastructure.Services
             });
         }
 
+        private static bool DeleteDirectory(string targetPath)
+        {
+            try
+            {
+                var files = Directory.EnumerateFiles(targetPath);
+                foreach (var file in files)
+                {
+                    File.Delete(file);
+                }
+                var dirs = Directory.EnumerateDirectories(targetPath);
+                foreach (var dir in dirs)
+                {
+                    DeleteDirectory(dir);
+                }
+                Directory.Delete(targetPath);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine((e));
+                return false;
+            }
+            return true;
+        }
         #endregion
     }
 }

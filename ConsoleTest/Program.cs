@@ -47,16 +47,16 @@ namespace ConsoleTest
             //            d.TotalSize);
             //    }
             //}
-            //TestCopy();
+            TestCopy();
             //TestMove();
-            TestDelete();
+            //TestDelete();
             Console.ReadKey();
         }
 
         public static async void TestCopy()
         {
-            string path = "H:\\New folder";
-            string targetPath = "G:\\Tmp\\sadasd";
+            string path = "H:\\New folder\\A";
+            string targetPath = "H:\\New folder\\B\\sadasd";
             IList<FileItemInfo> items = new List<FileItemInfo>();
             try
             {
@@ -83,6 +83,12 @@ namespace ConsoleTest
                 }
                 FileOperationService service = new FileOperationService();
                 var result = await service.CopyFileItem(items, targetPath, true);
+                foreach (var r in result)
+                {
+                    Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
+                }
+                Console.WriteLine("============================");
+                result = await service.UndoCopy(result);
                 foreach (var r in result)
                 {
                     Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
@@ -126,6 +132,12 @@ namespace ConsoleTest
                 }
                 FileOperationService service = new FileOperationService();
                 var result = await service.MoveFileItem(items, targetPath, true);
+                foreach (var r in result)
+                {
+                    Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
+                }
+                Console.WriteLine("============================");
+                result = await service.UndoMove(result,true);
                 foreach (var r in result)
                 {
                     Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");

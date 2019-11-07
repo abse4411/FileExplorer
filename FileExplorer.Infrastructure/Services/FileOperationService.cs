@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FileExplorer.Core.Services;
 
@@ -123,7 +121,6 @@ namespace FileExplorer.Infrastructure.Services
         #endregion
 
         #region Move
-
         public async Task<IList<FileItemRestoreInfo>> MoveFileItem(IList<FileItemInfo> sources, string targetPath,bool overwrite)
         {
             return await Task.Run(() =>
@@ -136,7 +133,7 @@ namespace FileExplorer.Infrastructure.Services
                     if (!item.IsDirectory)
                     {
                         var targetName = Path.Combine(targetPath, item.Name);
-                        if (MoveFile(item.FullName, targetName, overwrite))
+                        if (MoveFile(item.FullName, targetName))
                             result.Add(new FileItemRestoreInfo
                             {
                                 SourceName = item.FullName,
@@ -147,7 +144,7 @@ namespace FileExplorer.Infrastructure.Services
                     else
                     {
                         var targetName = Path.Combine(targetPath, item.Name);
-                        if (MoveFile(item.FullName, targetName, overwrite))
+                        if (MoveDirectory(item.FullName, targetName))
                             result.Add(new FileItemRestoreInfo
                             {
                                 SourceName = item.FullName,
@@ -161,15 +158,10 @@ namespace FileExplorer.Infrastructure.Services
             });
         }
 
-        private static bool MoveFile(string sourceFullName, string targetFullName, bool overwrite)
+        private static bool MoveFile(string sourceFullName, string targetFullName)
         {
             try
             {
-                if (overwrite)
-                {
-                    if (File.Exists(targetFullName))
-                        File.Delete(targetFullName);
-                }
                 File.Move(sourceFullName, targetFullName);
             }
             catch (Exception e)
@@ -194,6 +186,44 @@ namespace FileExplorer.Infrastructure.Services
             }
             return true;
         }
+        #endregion
+
+        #region Delete
+
+        public async Task<IList<FileItemRestoreInfo>> DeleteFileItem(IList<FileItemInfo> sources)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new List<FileItemRestoreInfo>();
+                foreach (var item in sources)
+                {
+                    if (!item.IsDirectory)
+                    {
+                        try
+                        {
+                            File.Delete(item.FullName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine((e));
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            Directory.Delete(item.FullName);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine((e));
+                        }
+                    }
+                }
+                return result;
+            });
+        }
+
         #endregion
     }
 }

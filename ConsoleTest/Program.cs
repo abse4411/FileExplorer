@@ -47,7 +47,9 @@ namespace ConsoleTest
             //            d.TotalSize);
             //    }
             //}
-            TestCopy();
+            //TestCopy();
+            //TestMove();
+            TestDelete();
             Console.ReadKey();
         }
 
@@ -55,11 +57,11 @@ namespace ConsoleTest
         {
             string path = "H:\\New folder";
             string targetPath = "G:\\Tmp\\sadasd";
-            IList<FileItemInfo> items=new List<FileItemInfo>();
+            IList<FileItemInfo> items = new List<FileItemInfo>();
             try
             {
                 DirectoryInfo directory = new DirectoryInfo(path);
-                var dirs= directory.EnumerateDirectories();
+                var dirs = directory.EnumerateDirectories();
                 foreach (var dir in dirs)
                 {
                     items.Add(new FileItemInfo
@@ -79,8 +81,8 @@ namespace ConsoleTest
                         IsDirectory = false
                     });
                 }
-                FileOperationService service=new FileOperationService();
-                var result =await service.CopyFileItem(items, targetPath, true);
+                FileOperationService service = new FileOperationService();
+                var result = await service.CopyFileItem(items, targetPath, true);
                 foreach (var r in result)
                 {
                     Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
@@ -93,10 +95,94 @@ namespace ConsoleTest
             }
 
         }
+
+        public static async void TestMove()
+        {
+            string path = "H:\\New folder\\A";
+            string targetPath = "H:\\New folder\\B\\sadasd";
+            IList<FileItemInfo> items = new List<FileItemInfo>();
+            try
+            {
+                DirectoryInfo directory = new DirectoryInfo(path);
+                var dirs = directory.EnumerateDirectories();
+                foreach (var dir in dirs)
+                {
+                    items.Add(new FileItemInfo
+                    {
+                        FullName = dir.FullName,
+                        Name = dir.Name,
+                        IsDirectory = true
+                    });
+                }
+                var files = directory.EnumerateFiles();
+                foreach (var file in files)
+                {
+                    items.Add(new FileItemInfo
+                    {
+                        FullName = file.FullName,
+                        Name = file.Name,
+                        IsDirectory = false
+                    });
+                }
+                FileOperationService service = new FileOperationService();
+                var result = await service.MoveFileItem(items, targetPath, true);
+                foreach (var r in result)
+                {
+                    Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public static async void TestDelete()
+        {
+            string path = "H:\\New folder\\A";
+            string targetPath = "H:\\New folder\\B\\sadasd";
+            IList<FileItemInfo> items = new List<FileItemInfo>();
+            try
+            {
+                DirectoryInfo directory = new DirectoryInfo(path);
+                var dirs = directory.EnumerateDirectories();
+                foreach (var dir in dirs)
+                {
+                    items.Add(new FileItemInfo
+                    {
+                        FullName = dir.FullName,
+                        Name = dir.Name,
+                        IsDirectory = true
+                    });
+                }
+                var files = directory.EnumerateFiles();
+                foreach (var file in files)
+                {
+                    items.Add(new FileItemInfo
+                    {
+                        FullName = file.FullName,
+                        Name = file.Name,
+                        IsDirectory = false
+                    });
+                }
+                FileOperationService service = new FileOperationService();
+                var result = await service.DeleteFileItem(items);
+                foreach (var r in result)
+                {
+                    Console.WriteLine($"{r.SourceName}\t{r.TargetName}\t{r.IsDirectory}");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
         public static void TestMethod()
         {
             var s = new FileService();
-            var task = s.FindFileItemsAsync(@"G:\\", "*",SearchOption.AllDirectories);
+            var task = s.FindFileItemsAsync(@"G:\\", "*", SearchOption.AllDirectories);
             task.Wait();
             var list = task.Result;
             foreach (var i in list)

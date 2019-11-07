@@ -46,6 +46,8 @@
     <Compile Include="Commands\ExecuteResult.cs" />
     <Compile Include="Models\FileItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FileItemInfo.cs" />
+    <Compile Include="Services\FileItemRestoreInfo.cs" />
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\IFileService.cs" />
     <Compile Include="Services\Result.cs" />

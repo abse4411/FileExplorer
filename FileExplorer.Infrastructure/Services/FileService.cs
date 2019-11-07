@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using FileExplorer.Core.Models;
 using FileExplorer.Core.Services;
 
-namespace FileExplorer.Infrastructure.Services
+namespace FileExplorer.Core.Services
 {
     public class FileService : IFileService
     {
@@ -121,21 +121,6 @@ namespace FileExplorer.Infrastructure.Services
                 result.Add(CreateFileItem(item));
             }
             return result;
-        }
-
-        public async Task<IList<FileItemInfo>> CopyFileItemTo(IList<FileItemInfo> sources,string targetPath)
-        {
-            return await Task.Run(() =>
-            {
-                var result = new List<FileItemInfo>();
-                //foreach(var item in sources)
-                //{
-                //    if(item.IsDirectory)
-                //        Directory.
-                //}
-
-                return result;
-            });
         }
     }
 }

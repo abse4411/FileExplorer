@@ -387,10 +387,5 @@ namespace FileExplorer
         {
             ViewModel.ShowAbout();
         }
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
     }
 }

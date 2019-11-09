@@ -390,11 +390,7 @@ namespace FileExplorer
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                contextMenuStrip1.Show(FileList, e.Location);
-                MessageBox.Show("MouseButton Right Clicked");
-            }
+
         }
     }
 }
